@@ -4,7 +4,10 @@
 @if(isset($player))
 <section class="section" style="background-color: #000; padding: 1rem 1.5rem 3rem;">
   <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-10">
         <div id="featured-stream" class="video"></div>
+      </div>
     </div>
   </div>
 </section>
@@ -14,7 +17,9 @@
   <div class="container" style="padding: 1.5rem 0;">
     <div class="is-blockquote has-background-info"></div>
     <div class="title">About the Team</div>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <p>
+      ArmedGG is a multi-gaming organzation that was established in 2019. The team's philosiphy is to push the limits  by persistently streaming and creating new content. ArmedGG would like to invite all players to become apart of a new generation of gaming. gaming.
+    </p>
   </div>
 </section>
 
@@ -22,7 +27,9 @@
   <div class="container" style="padding: 1.5rem 0;">
     <div class="is-blockquote has-background-info"></div>
     <div class="title">How to join</div>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+    <p>
+      In order to join a team you must have an invite from another player or you can message our twitter account @armedgg for an invite.
+    </p>
   </div>
 </section>
 
