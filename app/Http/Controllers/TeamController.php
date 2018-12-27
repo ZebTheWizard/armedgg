@@ -82,6 +82,7 @@ class TeamController extends Controller
 
     public function update(TeamUpdate $r)
     {
+      dd("fail here");
       $data = $r->validated();
       $team = Team::findOrFail($r->id);
       dd([$data, $team]);
