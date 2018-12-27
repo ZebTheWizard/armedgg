@@ -25,7 +25,7 @@ class TeamUpdate extends FormRequest
     {
         return [
             'id' => 'required',
-            'name' => 'required|max:30|min:3',
+            'name' => 'required|max:30|min:2',
             'color' => 'required|starts_with:#|max:7|min:7',
             'overview' => 'required|min:20',
             'logo' => 'required|url'
