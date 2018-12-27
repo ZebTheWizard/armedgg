@@ -18,6 +18,7 @@ class PlayerController extends Controller
         $player = Auth::user()->player;
       } else {
         $player = new Player;
+        $player->user_id = Auth::id();
       }
 
       $player->avatar = upload_image($r, [
