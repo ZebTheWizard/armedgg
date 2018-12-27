@@ -14,7 +14,12 @@ class PlayerController extends Controller
 {
 
     public function avatar(Request $r) {
-      $player = Auth::user()->player;
+      if (isset(Auth::user()->player)) {
+        $player = Auth::user()->player;
+      } else {
+        $player = new Player;
+      }
+
       $player->avatar = upload_image($r, [
         "path" => "/player_avatars",
         "width" => 150,
