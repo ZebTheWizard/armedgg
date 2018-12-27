@@ -84,6 +84,7 @@ class TeamController extends Controller
     {
       $data = $r->validated();
       $team = Team::findOrFail($r->id);
+      dd([$data, $team]);
       $this->isMod($team);
       $team->update($data);
       return back();
