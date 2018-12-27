@@ -37889,6 +37889,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: { ImageUploader: __WEBPACK_IMPORTED_MODULE_0__ImageUploader___default.a },
   props: {
+    name: {
+      type: [String],
+      default: 'avatar'
+    },
     src: {
       type: [String]
     },
@@ -42347,7 +42351,7 @@ var render = function() {
     }),
     _vm._v(" "),
     _c("input", {
-      attrs: { type: "hidden", name: "image_url" },
+      attrs: { type: "hidden" },
       domProps: { value: _vm.image_url }
     })
   ])
@@ -42419,7 +42423,7 @@ var render = function() {
     },
     [
       _c("input", {
-        attrs: { type: "hidden", name: "avatar" },
+        attrs: { type: "hidden", name: _vm.name },
         domProps: { value: _vm.userAvatar }
       }),
       _vm._v(" "),

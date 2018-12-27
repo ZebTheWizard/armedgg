@@ -16,7 +16,7 @@
           <li>
             <a href="/dashboard/player/edit" class="{{ $v('dashboard.my-player') }}">My Player</a>
           </li>
-          <li><a href="/dashboard/player/teams" class="{{ $v('dashboard.my-team') }}">My Teams</a></li>
+          <!-- <li><a href="/dashboard/player/teams" class="{{ $v('dashboard.my-team') }}">My Teams</a></li> -->
         </ul>
         @if (Auth::user()->isAdmin)
         <p class="menu-label">

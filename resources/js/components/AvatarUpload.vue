@@ -1,6 +1,6 @@
 <template>
   <div class="box avatar-upload" :style="{width, height}">
-    <input type="hidden" name="avatar" :value="userAvatar">
+    <input type="hidden" :name="name" :value="userAvatar">
     <figure>
       <p class="image has-background-grey-lighter" style="height: 150px; width: 150px">
         <img v-if="userAvatar" :src="userAvatar || src">
@@ -23,6 +23,10 @@
   export default {
     components: { ImageUploader },
     props: {
+      name: {
+        type: [String],
+        default: 'avatar'
+      },
       src: {
         type: [String]
       },

@@ -75,7 +75,7 @@
     <div class="column is-3">
       <div class="field">
         <label class="label">Logo <span class="has-text-danger"></span></label>
-        <avatar-upload src="{{ $team->logo }}" url="/dashboard/team/logo" label="Upload Logo" :data="{ team_id: '{{ $team->id }}'}"></avatar-upload>
+        <avatar-upload name="logo" src="{{ $team->logo }}" url="/dashboard/team/logo" label="Upload Logo" :data="{ team_id: '{{ $team->id }}'}"></avatar-upload>
       </div>
     </div>
   </div>

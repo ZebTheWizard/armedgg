@@ -46,7 +46,7 @@
     </div>
 
     <input ref="input" type="file" class="copy" :accept="mimes">
-    <input type="hidden" name="image_url" :value="image_url">
+    <input type="hidden" :value="image_url">
   </div>
 </template>
 
