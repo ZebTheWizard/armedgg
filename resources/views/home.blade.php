@@ -18,7 +18,7 @@
     <div class="is-blockquote has-background-info"></div>
     <div class="title">About the Team</div>
     <p>
-      ArmedGG is a multi-gaming organzation that was established in 2019. The team's philosiphy is to push the limits  by persistently streaming and creating new content. ArmedGG would like to invite all players to become apart of a new generation of gaming. gaming.
+      ArmedGG is a multi-gaming organzation that was established in 2019. The team's philosiphy is to push the limits  by persistently streaming and creating new content. ArmedGG would like to invite all players to become apart of a new generation of gaming.
     </p>
   </div>
 </section>
@@ -28,7 +28,7 @@
     <div class="is-blockquote has-background-info"></div>
     <div class="title">How to join</div>
     <p>
-      In order to join a team you must have an invite from another player or you can message our twitter account @armedgg for an invite.
+      In order to join a team you must have an invite from another player or you can message our twitter account @armedgg for an invite. Or better yet, you can become an alpha member by clicking here: <a href="https://armedgg.com/i/062fd516-5062-4f7b-aa43-0f5d714aa897" class="button is-primary is-small">Join Now</a>
     </p>
   </div>
 </section>

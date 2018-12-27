@@ -8,9 +8,21 @@ use Team;
 
 class RosterController extends Controller
 {
+    // private excludeAdmin = function($q) {
+    //   $q->where('isAdmin', 0);
+    // }
+
+    private function excludeAdmin() {
+      return function($q) {
+        $q->where('isAdmin', 0);
+      };
+    }
+
     public function all() {
       return view('roster.all', [
-        "players" => Player::with('user.teams')->get()
+        "players" => Player::with('user.teams')
+          ->whereHas('user', $this->excludeAdmin())
+          ->get()
       ]);
     }
 
@@ -18,7 +30,7 @@ class RosterController extends Controller
       return view('roster.creators', [
         "players" => Player::with('user.teams')->whereHas('user.teams', function ($q) {
           $q->where('name', 'like', '%creator%');
-        })->get()
+        })->whereHas('user', $this->excludeAdmin())->get()
       ]);
     }
 
@@ -26,13 +38,16 @@ class RosterController extends Controller
       return view('roster.streamers', [
         "players" => Player::with('user.teams')->whereHas('user.teams', function ($q) {
           $q->where('name', 'like', '%stream%');
-        })->get()
+        })->whereHas('user', $this->excludeAdmin())->get()
       ]);
     }
 
     public function teams($team) {
+      // return response()->json(
+      //   Team::where('id', $team)->with('users.player')->with(['users' => $this->excludeAdmin()])->first()
+      // );
       return view('roster.team', [
-        "team" => Team::where('id', $team)->with('users.player')->first()
+        "team" => Team::where('id', $team)->with('users.player')->with(['users' => $this->excludeAdmin()])->first()
       ]);
     }
 }
