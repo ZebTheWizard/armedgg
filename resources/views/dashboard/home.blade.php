@@ -13,13 +13,13 @@
       "link" => "/dashboard/player/edit",
       "color" => "dark",
     ],
-    [
-      "middleware" => "none",
-      "name" => "My Teams",
-      "icon" => "fas fa-headset",
-      "link" => "/dashboard/player/teams",
-      "color" => "dark",
-    ],
+    // [
+    //   "middleware" => "none",
+    //   "name" => "My Teams",
+    //   "icon" => "fas fa-headset",
+    //   "link" => "/dashboard/player/teams",
+    //   "color" => "dark",
+    // ],
     [
       "middleware" => "isMod",
       "name" => "Invitations",
@@ -27,13 +27,13 @@
       "link" => "/dashboard/invite/view",
       "color" => "warning",
     ],
-    [
-      "middleware" => "isMod",
-      "name" => "Players",
-      "icon" => "fas fa-users",
-      "link" => "/dashboard/player/view",
-      "color" => "warning",
-    ],
+    // [
+    //   "middleware" => "isMod",
+    //   "name" => "Players",
+    //   "icon" => "fas fa-users",
+    //   "link" => "/dashboard/player/view",
+    //   "color" => "warning",
+    // ],
     [
       "middleware" => "isMod",
       "name" => "Teams",

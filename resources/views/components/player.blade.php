@@ -1,5 +1,5 @@
 <div class="column is-4" data-find='{{ $player->fname }} "{{ $player->nname }}" {{ $player->lname }}'>
-  <div class="player-card" data-id="{{ $player->id }}">
+  <div class="player-card" data-id="{{ $player->id }}" onclick='location.href="/p/{{ $player->id }}"'>
     <div class="player-watermark"></div>
     <article class="media" style="">
       <figure class="media-left">
