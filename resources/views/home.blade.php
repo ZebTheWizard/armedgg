@@ -1,7 +1,7 @@
 @extends('layouts.main-layout')
 
 @section('content')
-@if($player)
+@if(isset($player))
 <section class="section" style="background-color: #000; padding: 1rem 1.5rem 3rem;">
   <div class="container">
         <div id="featured-stream" class="video"></div>
@@ -35,7 +35,7 @@
 
 
 @section('scripts')
-@if($player)
+@if(isset($player))
 <script type="text/javascript">
 
 
