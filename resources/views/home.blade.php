@@ -79,7 +79,7 @@
         <div class="is-blockquote has-background-info"></div>
         <div class="title"><i class="fas fa-question-circle"></i>How to join</div>
         <p class="is-size-5" style="line-height: 3rem; max-width: 800px;">
-          In order to join a team you must have an invite from another player or you can message our twitter account @armedgg for an invite. Or better yet, you can become an alpha member by clicking here: <a href="https://armedgg.com/i/062fd516-5062-4f7b-aa43-0f5d714aa897" class="button is-primary">Join Now</a>
+          To be apart of a team you must have an invite from a leader of Armed Gaming. You can contact a leader through the <a href="//twitter.com/armedgg">@armedgg</a> Twitter Account.
         </p>
       </div>
     </div>

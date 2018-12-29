@@ -11,7 +11,7 @@ return [
     [
       "icon" => "fab fa-discord",
       "name" => "discord",
-      "link" => "https://discord.gg/armedgg",
+      "link" => "https://discord.gg/aGWmKND",
       "color" => "#7289da"
     ],
     [
