@@ -3,16 +3,16 @@
     <div class="navbar-brand">
       <a class="navbar-item" href="/">
         <img src="/png/logo.png" alt="" width="35" height="35" style="max-height: 35px">
-        <span class="is-size-3 has-text-weight-bold">{{ config('app.name', 'Laravel') }}</span>
+        <span class="is-size-4 has-text-weight-bold">{{ config('app.name', 'Laravel') }}</span>
       </a>
 
-      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" onclick="showNavbar()">
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
         <span aria-hidden="true"></span>
       </a>
     </div>
-    <div class="navbar-end">
+    <div class="navbar-end is-hidden-touch" id="navbarlinks">
       <a class="navbar-item" href="/">Home</a>
       <a class="navbar-item" href="/roster/all">Roster</a>
       <a class="navbar-item" href="/sponsors">Sponsors</a>

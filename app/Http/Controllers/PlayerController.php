@@ -9,9 +9,14 @@ use Image;
 use Storage;
 use Validator;
 use App\Rules\LiveUrl;
+use \romanzipp\Twitch\Twitch;
 
 class PlayerController extends Controller
 {
+
+    public function twitch ($username) {
+      dd(liveOnTwitch($username));
+    }
 
     public function avatar(Request $r) {
       if (isset(Auth::user()->player)) {

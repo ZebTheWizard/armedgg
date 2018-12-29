@@ -5,6 +5,8 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Player;
 use DB;
+use App\Streamer;
+use Artisan;
 
 class ChooseFeaturedStreamer extends Command
 {
@@ -39,26 +41,20 @@ class ChooseFeaturedStreamer extends Command
      */
     public function handle()
     {
-        $streamer = DB::table('featured_streamer')
-          ->orderBy('created_at', 'desc')
-          ->first();
-        if (!$streamer) {
-          $streamer = collect([]);
-          $playerquery = Player::whereNotNull('twitch');
-        } else {
-          $playerquery = Player::whereNotNull('twitch')
-            ->where('id', '!=', $streamer->player_id);
-        }
-        // dd($streamer->toArray());
-        $player = $playerquery
+        Artisan::call('streamer:add');
+        $player = Streamer::where('twitch_live', true)
           ->inRandomOrder()
           ->first();
 
-        DB::table('featured_streamer')->insertGetId([
-            "player_id" => $player->id,
-            "created_at" => \Carbon\Carbon::now(),
-            "updated_at" => \Carbon\Carbon::now(),
-        ]);
+        if ($player !== null) {
+          DB::table('featured_streamer')->insertGetId([
+              "player_id" => $player->player_id,
+              "created_at" => \Carbon\Carbon::now(),
+              "updated_at" => \Carbon\Carbon::now(),
+          ]);
+        }
+
+
 
     }
 }

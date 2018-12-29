@@ -46,3 +46,16 @@
           enable_page_level_ads: true
      });
 </script>
+
+
+<script type="text/javascript">
+  window.showNavbar = function () {
+    var style = document.getElementById('navbarlinks').style
+    if(style.display === 'block') {
+      style.setProperty("display", "none", "important")
+    } else {
+      style.setProperty("display", "block", "important")
+    }
+
+  }
+</script>

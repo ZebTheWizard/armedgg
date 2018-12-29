@@ -2765,7 +2765,7 @@ var NATIVE_TYPES = __webpack_require__(120),
     forEach = __webpack_require__(7),
     isClass = __webpack_require__(121),
     spaceSplit = __webpack_require__(38),
-    isPlainObject = __webpack_require__(65);
+    isPlainObject = __webpack_require__(66);
 
 var isSerializable,
     isBoolean, isNumber, isString,
@@ -3496,403 +3496,6 @@ module.exports = defineOnPrototype;
 
 /***/ }),
 /* 18 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var buildMathAliases = __webpack_require__(304);
-
-buildMathAliases();
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var buildClassCheckMethods = __webpack_require__(480);
-
-buildClassCheckMethods();
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var _utc = __webpack_require__(26);
-
-function callDateGet(d, method) {
-  return d['get' + (_utc(d) ? 'UTC' : '') + method]();
-}
-
-module.exports = callDateGet;
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-function fixArgumentLength(fn) {
-  var staticFn = function(a) {
-    var args = arguments;
-    return fn(a, args[1], args[2], args.length - 1);
-  };
-  staticFn.instance = function(b) {
-    var args = arguments;
-    return fn(this, b, args[1], args.length);
-  };
-  return staticFn;
-}
-
-module.exports = fixArgumentLength;
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var buildFromIndexMethods = __webpack_require__(424);
-
-buildFromIndexMethods();
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var callDateGet = __webpack_require__(20);
-
-function getWeekday(d) {
-  return callDateGet(d, 'Day');
-}
-
-module.exports = getWeekday;
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = {
-  HALF_WIDTH_ZERO: 0x30,
-  FULL_WIDTH_ZERO: 0xff10,
-  HALF_WIDTH_PERIOD: '.',
-  FULL_WIDTH_PERIOD: '．',
-  HALF_WIDTH_COMMA: ',',
-  OPEN_BRACE: '{',
-  CLOSE_BRACE: '}'
-};
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var isPrimitive = __webpack_require__(31),
-    classChecks = __webpack_require__(2),
-    dateMatcher = __webpack_require__(347),
-    regexMatcher = __webpack_require__(348),
-    isObjectType = __webpack_require__(12),
-    isPlainObject = __webpack_require__(65),
-    defaultMatcher = __webpack_require__(349),
-    functionMatcher = __webpack_require__(352),
-    coreUtilityAliases = __webpack_require__(4);
-
-var getOwn = coreUtilityAliases.getOwn,
-    classToString = coreUtilityAliases.classToString,
-    forEachProperty = coreUtilityAliases.forEachProperty,
-    isDate = classChecks.isDate,
-    isRegExp = classChecks.isRegExp,
-    isFunction = classChecks.isFunction;
-
-function getMatcher(f) {
-  if (!isPrimitive(f)) {
-    var className = classToString(f);
-    if (isRegExp(f, className)) {
-      return regexMatcher(f);
-    } else if (isDate(f, className)) {
-      return dateMatcher(f);
-    } else if (isFunction(f, className)) {
-      return functionMatcher(f);
-    } else if (isPlainObject(f, className)) {
-      return fuzzyMatcher(f);
-    }
-  }
-  // Default is standard isEqual
-  return defaultMatcher(f);
-}
-
-function fuzzyMatcher(obj) {
-  var matchers = {};
-  return function(el, i, arr) {
-    var matched = true;
-    if (!isObjectType(el)) {
-      return false;
-    }
-    forEachProperty(obj, function(val, key) {
-      matchers[key] = getOwn(matchers, key) || getMatcher(val);
-      if (matchers[key].call(arr, el[key], i, arr) === false) {
-        matched = false;
-      }
-      return matched;
-    });
-    return matched;
-  };
-}
-
-module.exports = getMatcher;
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var privatePropertyAccessor = __webpack_require__(60);
-
-module.exports = privatePropertyAccessor('utc');
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var getExtendedDate = __webpack_require__(109);
-
-function createDate(d, options, forceClone) {
-  return getExtendedDate(null, d, options, forceClone).date;
-}
-
-module.exports = createDate;
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var setDate = __webpack_require__(50),
-    getDate = __webpack_require__(51),
-    getWeekday = __webpack_require__(23),
-    classChecks = __webpack_require__(2),
-    mathAliases = __webpack_require__(5);
-
-var isNumber = classChecks.isNumber,
-    abs = mathAliases.abs;
-
-function setWeekday(d, dow, dir) {
-  if (!isNumber(dow)) return;
-  var currentWeekday = getWeekday(d);
-  if (dir) {
-    // Allow a "direction" parameter to determine whether a weekday can
-    // be set beyond the current weekday in either direction.
-    var ndir = dir > 0 ? 1 : -1;
-    var offset = dow % 7 - currentWeekday;
-    if (offset && offset / abs(offset) !== ndir) {
-      dow += 7 * ndir;
-    }
-  }
-  setDate(d, getDate(d) + dow - currentWeekday);
-  return d.getTime();
-}
-
-module.exports = setWeekday;
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var buildDateRangeUnits = __webpack_require__(772);
-
-buildDateRangeUnits();
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-function map(arr, fn) {
-  // perf: Not using fixed array len here as it may be sparse.
-  var result = [];
-  for (var i = 0, len = arr.length; i < len; i++) {
-    if (i in arr) {
-      result.push(fn(arr[i], i));
-    }
-  }
-  return result;
-}
-
-module.exports = map;
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-function isPrimitive(obj, type) {
-  type = type || typeof obj;
-  return obj == null || type === 'string' || type === 'number' || type === 'boolean';
-}
-
-module.exports = isPrimitive;
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = 'enhance';
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var buildEnhancedMatching = __webpack_require__(421);
-
-module.exports = {
-  enhancedFind: buildEnhancedMatching('find'),
-  enhancedSome: buildEnhancedMatching('some'),
-  enhancedEvery: buildEnhancedMatching('every'),
-  enhancedFilter: buildEnhancedMatching('filter'),
-  enhancedFindIndex: buildEnhancedMatching('findIndex')
-};
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var getDaysInMonth = __webpack_require__(170);
-
-var DateUnits = [
-  {
-    name: 'millisecond',
-    method: 'Milliseconds',
-    multiplier: 1,
-    start: 0,
-    end: 999
-  },
-  {
-    name: 'second',
-    method: 'Seconds',
-    multiplier: 1000,
-    start: 0,
-    end: 59
-  },
-  {
-    name: 'minute',
-    method: 'Minutes',
-    multiplier: 60 * 1000,
-    start: 0,
-    end: 59
-  },
-  {
-    name: 'hour',
-    method: 'Hours',
-    multiplier: 60 * 60 * 1000,
-    start: 0,
-    end: 23
-  },
-  {
-    name: 'day',
-    alias: 'date',
-    method: 'Date',
-    ambiguous: true,
-    multiplier: 24 * 60 * 60 * 1000,
-    start: 1,
-    end: function(d) {
-      return getDaysInMonth(d);
-    }
-  },
-  {
-    name: 'week',
-    method: 'ISOWeek',
-    ambiguous: true,
-    multiplier: 7 * 24 * 60 * 60 * 1000
-  },
-  {
-    name: 'month',
-    method: 'Month',
-    ambiguous: true,
-    multiplier: 30.4375 * 24 * 60 * 60 * 1000,
-    start: 0,
-    end: 11
-  },
-  {
-    name: 'year',
-    method: 'FullYear',
-    ambiguous: true,
-    multiplier: 365.25 * 24 * 60 * 60 * 1000,
-    start: 0
-  }
-];
-
-module.exports = DateUnits;
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var callDateGet = __webpack_require__(20);
-
-function getYear(d) {
-  return callDateGet(d, 'FullYear');
-}
-
-module.exports = getYear;
-
-/***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-var callDateGet = __webpack_require__(20);
-
-function getMonth(d) {
-  return callDateGet(d, 'Month');
-}
-
-module.exports = getMonth;
-
-/***/ }),
-/* 37 */
 /***/ (function(module, exports) {
 
 /* globals __VUE_SSR_CONTEXT__ */
@@ -3999,6 +3602,403 @@ module.exports = function normalizeComponent (
   }
 }
 
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var buildMathAliases = __webpack_require__(304);
+
+buildMathAliases();
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var buildClassCheckMethods = __webpack_require__(480);
+
+buildClassCheckMethods();
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var _utc = __webpack_require__(27);
+
+function callDateGet(d, method) {
+  return d['get' + (_utc(d) ? 'UTC' : '') + method]();
+}
+
+module.exports = callDateGet;
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function fixArgumentLength(fn) {
+  var staticFn = function(a) {
+    var args = arguments;
+    return fn(a, args[1], args[2], args.length - 1);
+  };
+  staticFn.instance = function(b) {
+    var args = arguments;
+    return fn(this, b, args[1], args.length);
+  };
+  return staticFn;
+}
+
+module.exports = fixArgumentLength;
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var buildFromIndexMethods = __webpack_require__(424);
+
+buildFromIndexMethods();
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var callDateGet = __webpack_require__(21);
+
+function getWeekday(d) {
+  return callDateGet(d, 'Day');
+}
+
+module.exports = getWeekday;
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+  HALF_WIDTH_ZERO: 0x30,
+  FULL_WIDTH_ZERO: 0xff10,
+  HALF_WIDTH_PERIOD: '.',
+  FULL_WIDTH_PERIOD: '．',
+  HALF_WIDTH_COMMA: ',',
+  OPEN_BRACE: '{',
+  CLOSE_BRACE: '}'
+};
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var isPrimitive = __webpack_require__(32),
+    classChecks = __webpack_require__(2),
+    dateMatcher = __webpack_require__(347),
+    regexMatcher = __webpack_require__(348),
+    isObjectType = __webpack_require__(12),
+    isPlainObject = __webpack_require__(66),
+    defaultMatcher = __webpack_require__(349),
+    functionMatcher = __webpack_require__(352),
+    coreUtilityAliases = __webpack_require__(4);
+
+var getOwn = coreUtilityAliases.getOwn,
+    classToString = coreUtilityAliases.classToString,
+    forEachProperty = coreUtilityAliases.forEachProperty,
+    isDate = classChecks.isDate,
+    isRegExp = classChecks.isRegExp,
+    isFunction = classChecks.isFunction;
+
+function getMatcher(f) {
+  if (!isPrimitive(f)) {
+    var className = classToString(f);
+    if (isRegExp(f, className)) {
+      return regexMatcher(f);
+    } else if (isDate(f, className)) {
+      return dateMatcher(f);
+    } else if (isFunction(f, className)) {
+      return functionMatcher(f);
+    } else if (isPlainObject(f, className)) {
+      return fuzzyMatcher(f);
+    }
+  }
+  // Default is standard isEqual
+  return defaultMatcher(f);
+}
+
+function fuzzyMatcher(obj) {
+  var matchers = {};
+  return function(el, i, arr) {
+    var matched = true;
+    if (!isObjectType(el)) {
+      return false;
+    }
+    forEachProperty(obj, function(val, key) {
+      matchers[key] = getOwn(matchers, key) || getMatcher(val);
+      if (matchers[key].call(arr, el[key], i, arr) === false) {
+        matched = false;
+      }
+      return matched;
+    });
+    return matched;
+  };
+}
+
+module.exports = getMatcher;
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var privatePropertyAccessor = __webpack_require__(60);
+
+module.exports = privatePropertyAccessor('utc');
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var getExtendedDate = __webpack_require__(110);
+
+function createDate(d, options, forceClone) {
+  return getExtendedDate(null, d, options, forceClone).date;
+}
+
+module.exports = createDate;
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var setDate = __webpack_require__(50),
+    getDate = __webpack_require__(51),
+    getWeekday = __webpack_require__(24),
+    classChecks = __webpack_require__(2),
+    mathAliases = __webpack_require__(5);
+
+var isNumber = classChecks.isNumber,
+    abs = mathAliases.abs;
+
+function setWeekday(d, dow, dir) {
+  if (!isNumber(dow)) return;
+  var currentWeekday = getWeekday(d);
+  if (dir) {
+    // Allow a "direction" parameter to determine whether a weekday can
+    // be set beyond the current weekday in either direction.
+    var ndir = dir > 0 ? 1 : -1;
+    var offset = dow % 7 - currentWeekday;
+    if (offset && offset / abs(offset) !== ndir) {
+      dow += 7 * ndir;
+    }
+  }
+  setDate(d, getDate(d) + dow - currentWeekday);
+  return d.getTime();
+}
+
+module.exports = setWeekday;
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var buildDateRangeUnits = __webpack_require__(772);
+
+buildDateRangeUnits();
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function map(arr, fn) {
+  // perf: Not using fixed array len here as it may be sparse.
+  var result = [];
+  for (var i = 0, len = arr.length; i < len; i++) {
+    if (i in arr) {
+      result.push(fn(arr[i], i));
+    }
+  }
+  return result;
+}
+
+module.exports = map;
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+function isPrimitive(obj, type) {
+  type = type || typeof obj;
+  return obj == null || type === 'string' || type === 'number' || type === 'boolean';
+}
+
+module.exports = isPrimitive;
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = 'enhance';
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var buildEnhancedMatching = __webpack_require__(421);
+
+module.exports = {
+  enhancedFind: buildEnhancedMatching('find'),
+  enhancedSome: buildEnhancedMatching('some'),
+  enhancedEvery: buildEnhancedMatching('every'),
+  enhancedFilter: buildEnhancedMatching('filter'),
+  enhancedFindIndex: buildEnhancedMatching('findIndex')
+};
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var getDaysInMonth = __webpack_require__(170);
+
+var DateUnits = [
+  {
+    name: 'millisecond',
+    method: 'Milliseconds',
+    multiplier: 1,
+    start: 0,
+    end: 999
+  },
+  {
+    name: 'second',
+    method: 'Seconds',
+    multiplier: 1000,
+    start: 0,
+    end: 59
+  },
+  {
+    name: 'minute',
+    method: 'Minutes',
+    multiplier: 60 * 1000,
+    start: 0,
+    end: 59
+  },
+  {
+    name: 'hour',
+    method: 'Hours',
+    multiplier: 60 * 60 * 1000,
+    start: 0,
+    end: 23
+  },
+  {
+    name: 'day',
+    alias: 'date',
+    method: 'Date',
+    ambiguous: true,
+    multiplier: 24 * 60 * 60 * 1000,
+    start: 1,
+    end: function(d) {
+      return getDaysInMonth(d);
+    }
+  },
+  {
+    name: 'week',
+    method: 'ISOWeek',
+    ambiguous: true,
+    multiplier: 7 * 24 * 60 * 60 * 1000
+  },
+  {
+    name: 'month',
+    method: 'Month',
+    ambiguous: true,
+    multiplier: 30.4375 * 24 * 60 * 60 * 1000,
+    start: 0,
+    end: 11
+  },
+  {
+    name: 'year',
+    method: 'FullYear',
+    ambiguous: true,
+    multiplier: 365.25 * 24 * 60 * 60 * 1000,
+    start: 0
+  }
+];
+
+module.exports = DateUnits;
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var callDateGet = __webpack_require__(21);
+
+function getYear(d) {
+  return callDateGet(d, 'FullYear');
+}
+
+module.exports = getYear;
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var callDateGet = __webpack_require__(21);
+
+function getMonth(d) {
+  return callDateGet(d, 'Month');
+}
+
+module.exports = getMonth;
 
 /***/ }),
 /* 38 */
@@ -4138,9 +4138,9 @@ module.exports = getKeys;
 "use strict";
 
 
-var map = __webpack_require__(30),
+var map = __webpack_require__(31),
     classChecks = __webpack_require__(2),
-    deepGetProperty = __webpack_require__(69);
+    deepGetProperty = __webpack_require__(70);
 
 var isFunction = classChecks.isFunction,
     isArray = classChecks.isArray;
@@ -4207,8 +4207,8 @@ module.exports = setUnitAndLowerToEdge;
 "use strict";
 
 
-var _utc = __webpack_require__(26),
-    callDateGet = __webpack_require__(20);
+var _utc = __webpack_require__(27),
+    callDateGet = __webpack_require__(21);
 
 function callDateSet(d, method, value, safe) {
   // "Safe" denotes not setting the date if the value is the same as what is
@@ -4248,7 +4248,7 @@ module.exports = setDate;
 "use strict";
 
 
-var callDateGet = __webpack_require__(20);
+var callDateGet = __webpack_require__(21);
 
 function getDate(d) {
   return callDateGet(d, 'Date');
@@ -4263,7 +4263,7 @@ module.exports = getDate;
 "use strict";
 
 
-var _utc = __webpack_require__(26);
+var _utc = __webpack_require__(27);
 
 function cloneDate(d) {
   // Rhino environments have a bug where new Date(d) truncates
@@ -4383,7 +4383,7 @@ module.exports = withPrecision;
 "use strict";
 
 
-var methodDefineAliases = __webpack_require__(97),
+var methodDefineAliases = __webpack_require__(98),
     collectSimilarMethods = __webpack_require__(139);
 
 var defineInstance = methodDefineAliases.defineInstance;
@@ -4402,7 +4402,7 @@ module.exports = defineInstanceSimilar;
 
 
 var mathAliases = __webpack_require__(5),
-    repeatString = __webpack_require__(89);
+    repeatString = __webpack_require__(90);
 
 var abs = mathAliases.abs;
 
@@ -4544,7 +4544,7 @@ module.exports = getLowerUnitIndex;
 "use strict";
 
 
-var _dateOptions = __webpack_require__(110);
+var _dateOptions = __webpack_require__(111);
 
 function getNewDate() {
   return _dateOptions('newDateInternal')();
@@ -4559,7 +4559,7 @@ module.exports = getNewDate;
 "use strict";
 
 
-var updateDate = __webpack_require__(77);
+var updateDate = __webpack_require__(78);
 
 function advanceDate(d, unit, num, reset) {
   var set = {};
@@ -4584,6 +4584,88 @@ module.exports = dateIsValid;
 
 /***/ }),
 /* 65 */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
+
+
+/***/ }),
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4604,7 +4686,7 @@ function isPlainObject(obj, className) {
 module.exports = isPlainObject;
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4613,13 +4695,13 @@ module.exports = isPlainObject;
 module.exports = {};
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var Inflections = __webpack_require__(66);
+var Inflections = __webpack_require__(67);
 
 function stringUnderscore(str) {
   var areg = Inflections.acronyms && Inflections.acronyms.reg;
@@ -4639,7 +4721,7 @@ function stringUnderscore(str) {
 module.exports = stringUnderscore;
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4652,13 +4734,13 @@ function simpleCapitalize(str) {
 module.exports = simpleCapitalize;
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var handleDeepProperty = __webpack_require__(86);
+var handleDeepProperty = __webpack_require__(87);
 
 function deepGetProperty(obj, key, any) {
   return handleDeepProperty(obj, key, any, false);
@@ -4667,13 +4749,13 @@ function deepGetProperty(obj, key, any) {
 module.exports = deepGetProperty;
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var simpleMerge = __webpack_require__(71);
+var simpleMerge = __webpack_require__(72);
 
 function simpleClone(obj) {
   return simpleMerge({}, obj);
@@ -4682,7 +4764,7 @@ function simpleClone(obj) {
 module.exports = simpleClone;
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4702,7 +4784,7 @@ function simpleMerge(target, source) {
 module.exports = simpleMerge;
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4778,15 +4860,15 @@ function objectIsEqual(a, b, aClass, stack) {
 module.exports = isEqual;
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var indexOf = __webpack_require__(90),
+var indexOf = __webpack_require__(91),
     isRealNaN = __webpack_require__(149),
-    isPrimitive = __webpack_require__(31),
+    isPrimitive = __webpack_require__(32),
     classChecks = __webpack_require__(2),
     isObjectType = __webpack_require__(12),
     coreUtilityAliases = __webpack_require__(4),
@@ -4836,7 +4918,7 @@ function serializeDeep(obj, refs, stack) {
 module.exports = serializeInternal;
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4851,7 +4933,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4859,7 +4941,7 @@ module.exports = {
 
 var classChecks = __webpack_require__(2),
     getMinOrMax = __webpack_require__(59),
-    serializeInternal = __webpack_require__(73),
+    serializeInternal = __webpack_require__(74),
     coreUtilityAliases = __webpack_require__(4),
     enumerateWithMapping = __webpack_require__(58),
     getReducedMinMaxResult = __webpack_require__(152);
@@ -4898,7 +4980,7 @@ function getLeastOrMost(obj, arg1, arg2, most, asObject) {
 module.exports = getLeastOrMost;
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -4911,28 +4993,28 @@ function tzOffset(d) {
 module.exports = tzOffset;
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var DateUnits = __webpack_require__(34),
+var DateUnits = __webpack_require__(35),
     DateUnitIndexes = __webpack_require__(9),
     trunc = __webpack_require__(15),
     setDate = __webpack_require__(50),
     getDate = __webpack_require__(51),
-    getMonth = __webpack_require__(36),
+    getMonth = __webpack_require__(37),
     getNewDate = __webpack_require__(62),
-    setWeekday = __webpack_require__(28),
+    setWeekday = __webpack_require__(29),
     mathAliases = __webpack_require__(5),
-    callDateGet = __webpack_require__(20),
+    callDateGet = __webpack_require__(21),
     classChecks = __webpack_require__(2),
     resetLowerUnits = __webpack_require__(537),
     getLowerUnitIndex = __webpack_require__(61),
     getHigherUnitIndex = __webpack_require__(538),
     callDateSetWithWeek = __webpack_require__(539),
-    iterateOverDateParams = __webpack_require__(78);
+    iterateOverDateParams = __webpack_require__(79);
 
 var DAY_INDEX = DateUnitIndexes.DAY_INDEX,
     WEEK_INDEX = DateUnitIndexes.WEEK_INDEX,
@@ -5090,7 +5172,7 @@ function updateDate(d, params, reset, advance, prefer, weekdayDir, contextDate) 
 module.exports = updateDate;
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5099,7 +5181,7 @@ module.exports = updateDate;
 var DateUnitIndexes = __webpack_require__(9),
     isDefined = __webpack_require__(8),
     getDateParam = __webpack_require__(542),
-    iterateOverDateUnits = __webpack_require__(108);
+    iterateOverDateUnits = __webpack_require__(109);
 
 var DAY_INDEX = DateUnitIndexes.DAY_INDEX;
 
@@ -5128,7 +5210,7 @@ function iterateOverDateParams(params, fn, startIndex, endIndex) {
 module.exports = iterateOverDateParams;
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5153,7 +5235,7 @@ function moveToEndOfUnit(d, unitIndex, localeCode, stopIndex) {
 module.exports = moveToEndOfUnit;
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5162,7 +5244,7 @@ module.exports = moveToEndOfUnit;
 var LocaleHelpers = __webpack_require__(10),
     DateUnitIndexes = __webpack_require__(9),
     getLowerUnitIndex = __webpack_require__(61),
-    moveToBeginningOfWeek = __webpack_require__(111),
+    moveToBeginningOfWeek = __webpack_require__(112),
     setUnitAndLowerToEdge = __webpack_require__(48);
 
 var WEEK_INDEX = DateUnitIndexes.WEEK_INDEX,
@@ -5178,14 +5260,14 @@ function moveToBeginningOfUnit(d, unitIndex, localeCode) {
 module.exports = moveToBeginningOfUnit;
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var classChecks = __webpack_require__(2),
-    rangeIsValid = __webpack_require__(82),
+    rangeIsValid = __webpack_require__(83),
     incrementDate = __webpack_require__(192),
     incrementNumber = __webpack_require__(764),
     incrementString = __webpack_require__(765),
@@ -5254,7 +5336,7 @@ function rangeEvery(range, step, countOnly, fn) {
 module.exports = rangeEvery;
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5271,7 +5353,7 @@ function rangeIsValid(range) {
 module.exports = rangeIsValid;
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5301,96 +5383,242 @@ function setDelay(fn, ms, after, scope, args) {
 module.exports = setDelay;
 
 /***/ }),
-/* 84 */
-/***/ (function(module, exports) {
+/* 85 */
+/***/ (function(module, exports, __webpack_require__) {
 
 /*
-	MIT License http://www.opensource.org/licenses/mit-license.php
-	Author Tobias Koppers @sokra
+  MIT License http://www.opensource.org/licenses/mit-license.php
+  Author Tobias Koppers @sokra
+  Modified by Evan You @yyx990803
 */
-// css base code, injected by the css-loader
-module.exports = function(useSourceMap) {
-	var list = [];
 
-	// return the list of modules as css string
-	list.toString = function toString() {
-		return this.map(function (item) {
-			var content = cssWithMappingToString(item, useSourceMap);
-			if(item[2]) {
-				return "@media " + item[2] + "{" + content + "}";
-			} else {
-				return content;
-			}
-		}).join("");
-	};
+var hasDocument = typeof document !== 'undefined'
 
-	// import a list of modules into the list
-	list.i = function(modules, mediaQuery) {
-		if(typeof modules === "string")
-			modules = [[null, modules, ""]];
-		var alreadyImportedModules = {};
-		for(var i = 0; i < this.length; i++) {
-			var id = this[i][0];
-			if(typeof id === "number")
-				alreadyImportedModules[id] = true;
-		}
-		for(i = 0; i < modules.length; i++) {
-			var item = modules[i];
-			// skip already imported module
-			// this implementation is not 100% perfect for weird media query combinations
-			//  when a module is imported multiple times with different media queries.
-			//  I hope this will never occur (Hey this way we have smaller bundles)
-			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-				if(mediaQuery && !item[2]) {
-					item[2] = mediaQuery;
-				} else if(mediaQuery) {
-					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-				}
-				list.push(item);
-			}
-		}
-	};
-	return list;
-};
-
-function cssWithMappingToString(item, useSourceMap) {
-	var content = item[1] || '';
-	var cssMapping = item[3];
-	if (!cssMapping) {
-		return content;
-	}
-
-	if (useSourceMap && typeof btoa === 'function') {
-		var sourceMapping = toComment(cssMapping);
-		var sourceURLs = cssMapping.sources.map(function (source) {
-			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
-		});
-
-		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
-	}
-
-	return [content].join('\n');
+if (typeof DEBUG !== 'undefined' && DEBUG) {
+  if (!hasDocument) {
+    throw new Error(
+    'vue-style-loader cannot be used in a non-browser environment. ' +
+    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
+  ) }
 }
 
-// Adapted from convert-source-map (MIT)
-function toComment(sourceMap) {
-	// eslint-disable-next-line no-undef
-	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
-	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+var listToStyles = __webpack_require__(851)
 
-	return '/*# ' + data + ' */';
+/*
+type StyleObject = {
+  id: number;
+  parts: Array<StyleObjectPart>
+}
+
+type StyleObjectPart = {
+  css: string;
+  media: string;
+  sourceMap: ?string
+}
+*/
+
+var stylesInDom = {/*
+  [id: number]: {
+    id: number,
+    refs: number,
+    parts: Array<(obj?: StyleObjectPart) => void>
+  }
+*/}
+
+var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
+var singletonElement = null
+var singletonCounter = 0
+var isProduction = false
+var noop = function () {}
+var options = null
+var ssrIdKey = 'data-vue-ssr-id'
+
+// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+// tags it will allow on a page
+var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
+
+module.exports = function (parentId, list, _isProduction, _options) {
+  isProduction = _isProduction
+
+  options = _options || {}
+
+  var styles = listToStyles(parentId, list)
+  addStylesToDom(styles)
+
+  return function update (newList) {
+    var mayRemove = []
+    for (var i = 0; i < styles.length; i++) {
+      var item = styles[i]
+      var domStyle = stylesInDom[item.id]
+      domStyle.refs--
+      mayRemove.push(domStyle)
+    }
+    if (newList) {
+      styles = listToStyles(parentId, newList)
+      addStylesToDom(styles)
+    } else {
+      styles = []
+    }
+    for (var i = 0; i < mayRemove.length; i++) {
+      var domStyle = mayRemove[i]
+      if (domStyle.refs === 0) {
+        for (var j = 0; j < domStyle.parts.length; j++) {
+          domStyle.parts[j]()
+        }
+        delete stylesInDom[domStyle.id]
+      }
+    }
+  }
+}
+
+function addStylesToDom (styles /* Array<StyleObject> */) {
+  for (var i = 0; i < styles.length; i++) {
+    var item = styles[i]
+    var domStyle = stylesInDom[item.id]
+    if (domStyle) {
+      domStyle.refs++
+      for (var j = 0; j < domStyle.parts.length; j++) {
+        domStyle.parts[j](item.parts[j])
+      }
+      for (; j < item.parts.length; j++) {
+        domStyle.parts.push(addStyle(item.parts[j]))
+      }
+      if (domStyle.parts.length > item.parts.length) {
+        domStyle.parts.length = item.parts.length
+      }
+    } else {
+      var parts = []
+      for (var j = 0; j < item.parts.length; j++) {
+        parts.push(addStyle(item.parts[j]))
+      }
+      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
+    }
+  }
+}
+
+function createStyleElement () {
+  var styleElement = document.createElement('style')
+  styleElement.type = 'text/css'
+  head.appendChild(styleElement)
+  return styleElement
+}
+
+function addStyle (obj /* StyleObjectPart */) {
+  var update, remove
+  var styleElement = document.querySelector('style[' + ssrIdKey + '~="' + obj.id + '"]')
+
+  if (styleElement) {
+    if (isProduction) {
+      // has SSR styles and in production mode.
+      // simply do nothing.
+      return noop
+    } else {
+      // has SSR styles but in dev mode.
+      // for some reason Chrome can't handle source map in server-rendered
+      // style tags - source maps in <style> only works if the style tag is
+      // created and inserted dynamically. So we remove the server rendered
+      // styles and inject new ones.
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  if (isOldIE) {
+    // use singleton mode for IE9.
+    var styleIndex = singletonCounter++
+    styleElement = singletonElement || (singletonElement = createStyleElement())
+    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
+    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
+  } else {
+    // use multi-style-tag mode in all other cases
+    styleElement = createStyleElement()
+    update = applyToTag.bind(null, styleElement)
+    remove = function () {
+      styleElement.parentNode.removeChild(styleElement)
+    }
+  }
+
+  update(obj)
+
+  return function updateStyle (newObj /* StyleObjectPart */) {
+    if (newObj) {
+      if (newObj.css === obj.css &&
+          newObj.media === obj.media &&
+          newObj.sourceMap === obj.sourceMap) {
+        return
+      }
+      update(obj = newObj)
+    } else {
+      remove()
+    }
+  }
+}
+
+var replaceText = (function () {
+  var textStore = []
+
+  return function (index, replacement) {
+    textStore[index] = replacement
+    return textStore.filter(Boolean).join('\n')
+  }
+})()
+
+function applyToSingletonTag (styleElement, index, remove, obj) {
+  var css = remove ? '' : obj.css
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = replaceText(index, css)
+  } else {
+    var cssNode = document.createTextNode(css)
+    var childNodes = styleElement.childNodes
+    if (childNodes[index]) styleElement.removeChild(childNodes[index])
+    if (childNodes.length) {
+      styleElement.insertBefore(cssNode, childNodes[index])
+    } else {
+      styleElement.appendChild(cssNode)
+    }
+  }
+}
+
+function applyToTag (styleElement, obj) {
+  var css = obj.css
+  var media = obj.media
+  var sourceMap = obj.sourceMap
+
+  if (media) {
+    styleElement.setAttribute('media', media)
+  }
+  if (options.ssrId) {
+    styleElement.setAttribute(ssrIdKey, obj.id)
+  }
+
+  if (sourceMap) {
+    // https://developer.chrome.com/devtools/docs/javascript-debugging
+    // this makes source maps inside style tags work properly in Chrome
+    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
+    // http://stackoverflow.com/a/26603875
+    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
+  }
+
+  if (styleElement.styleSheet) {
+    styleElement.styleSheet.cssText = css
+  } else {
+    while (styleElement.firstChild) {
+      styleElement.removeChild(styleElement.firstChild)
+    }
+    styleElement.appendChild(document.createTextNode(css))
+  }
 }
 
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var CAPITALIZE_REG = __webpack_require__(223),
-    simpleCapitalize = __webpack_require__(68);
+    simpleCapitalize = __webpack_require__(69);
 
 function stringCapitalize(str, downcase, all) {
   if (downcase) {
@@ -5402,18 +5630,18 @@ function stringCapitalize(str, downcase, all) {
 module.exports = stringCapitalize;
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var PROPERTY_RANGE_REG = __webpack_require__(244),
-    CommonChars = __webpack_require__(24),
-    map = __webpack_require__(30),
+    CommonChars = __webpack_require__(25),
+    map = __webpack_require__(31),
     isDefined = __webpack_require__(8),
     classChecks = __webpack_require__(2),
-    periodSplit = __webpack_require__(87),
+    periodSplit = __webpack_require__(88),
     assertArray = __webpack_require__(245),
     isObjectType = __webpack_require__(12),
     assertWritable = __webpack_require__(246),
@@ -5570,13 +5798,13 @@ function handleArrayIndexRange(obj, key, any, val) {
 module.exports = handleDeepProperty;
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var CommonChars = __webpack_require__(24);
+var CommonChars = __webpack_require__(25);
 
 var HALF_WIDTH_PERIOD = CommonChars.HALF_WIDTH_PERIOD;
 
@@ -5587,14 +5815,14 @@ function periodSplit(str) {
 module.exports = periodSplit;
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var isDefined = __webpack_require__(8),
-    repeatString = __webpack_require__(89);
+    repeatString = __webpack_require__(90);
 
 function padString(num, padding) {
   return repeatString(isDefined(padding) ? padding : ' ', num);
@@ -5603,7 +5831,7 @@ function padString(num, padding) {
 module.exports = padString;
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5626,7 +5854,7 @@ function repeatString(str, num) {
 module.exports = repeatString;
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5642,7 +5870,7 @@ function indexOf(arr, el) {
 module.exports = indexOf;
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5651,7 +5879,7 @@ module.exports = indexOf;
 module.exports = '\u0009\u000A\u000B\u000C\u000D\u0020\u00A0\u1680\u180E\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u2028\u2029\u3000\uFEFF';
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5671,7 +5899,7 @@ function filter(arr, fn) {
 module.exports = filter;
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5686,7 +5914,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5741,7 +5969,7 @@ function abbreviateNumber(num, precision, ustr, bytes) {
 module.exports = abbreviateNumber;
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5749,20 +5977,20 @@ module.exports = abbreviateNumber;
 
 var NUMBER_OPTIONS = __webpack_require__(301),
     namespaceAliases = __webpack_require__(13),
-    defineOptionsAccessor = __webpack_require__(96);
+    defineOptionsAccessor = __webpack_require__(97);
 
 var sugarNumber = namespaceAliases.sugarNumber;
 
 module.exports = defineOptionsAccessor(sugarNumber, NUMBER_OPTIONS);
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var simpleClone = __webpack_require__(70),
+var simpleClone = __webpack_require__(71),
     defineAccessor = __webpack_require__(302),
     coreUtilityAliases = __webpack_require__(4);
 
@@ -5799,7 +6027,7 @@ function defineOptionsAccessor(namespace, defaults) {
 module.exports = defineOptionsAccessor;
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5818,7 +6046,7 @@ module.exports = {
 };
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5835,7 +6063,7 @@ function createRoundingFunction(fn) {
 module.exports = createRoundingFunction;
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5848,7 +6076,7 @@ function isMultipleOf(n1, n2) {
 module.exports = isMultipleOf;
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5860,7 +6088,7 @@ var getSortOrder = __webpack_require__(374),
     namespaceAliases = __webpack_require__(13),
     getSortOrderIndex = __webpack_require__(378),
     getSortEquivalents = __webpack_require__(379),
-    defineOptionsAccessor = __webpack_require__(96),
+    defineOptionsAccessor = __webpack_require__(97),
     getCollationCharacter = __webpack_require__(380),
     getCollationReadyString = __webpack_require__(381);
 
@@ -5922,13 +6150,13 @@ module.exports = {
 };
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var objectMerge = __webpack_require__(102),
+var objectMerge = __webpack_require__(103),
     getNewObjectForMerge = __webpack_require__(160);
 
 function clone(source, deep) {
@@ -5939,7 +6167,7 @@ function clone(source, deep) {
 module.exports = clone;
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -5948,14 +6176,14 @@ module.exports = clone;
 var Sugar = __webpack_require__(0),
     isDefined = __webpack_require__(8),
     classChecks = __webpack_require__(2),
-    isPrimitive = __webpack_require__(31),
+    isPrimitive = __webpack_require__(32),
     isUndefined = __webpack_require__(6),
     isObjectType = __webpack_require__(12),
     coreUtilityAliases = __webpack_require__(4),
     getOwnPropertyNames = __webpack_require__(159),
     getNewObjectForMerge = __webpack_require__(160),
     iterateOverProperties = __webpack_require__(450),
-    coercePrimitiveToObject = __webpack_require__(103),
+    coercePrimitiveToObject = __webpack_require__(104),
     mergeByPropertyDescriptor = __webpack_require__(455);
 
 var isDate = classChecks.isDate,
@@ -6041,14 +6269,14 @@ function objectMerge(target, source, deep, resolve, hidden, descriptor) {
 module.exports = objectMerge;
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var NO_KEYS_IN_STRING_OBJECTS = __webpack_require__(453),
-    isPrimitive = __webpack_require__(31),
+    isPrimitive = __webpack_require__(32),
     classChecks = __webpack_require__(2),
     forceStringCoercion = __webpack_require__(454);
 
@@ -6068,13 +6296,13 @@ function coercePrimitiveToObject(obj) {
 module.exports = coercePrimitiveToObject;
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var objectMerge = __webpack_require__(102);
+var objectMerge = __webpack_require__(103);
 
 function mergeWithOptions(target, source, opts) {
   opts = opts || {};
@@ -6084,7 +6312,7 @@ function mergeWithOptions(target, source, opts) {
 module.exports = mergeWithOptions;
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6092,7 +6320,7 @@ module.exports = mergeWithOptions;
 
 var forEach = __webpack_require__(7),
     classChecks = __webpack_require__(2),
-    mergeWithOptions = __webpack_require__(104);
+    mergeWithOptions = __webpack_require__(105);
 
 var isArray = classChecks.isArray;
 
@@ -6109,15 +6337,15 @@ function mergeAll(target, sources, opts) {
 module.exports = mergeAll;
 
 /***/ }),
-/* 106 */
+/* 107 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 var EnglishLocaleBaseDefinition = __webpack_require__(522),
-    simpleMerge = __webpack_require__(71),
-    simpleClone = __webpack_require__(70);
+    simpleMerge = __webpack_require__(72),
+    simpleClone = __webpack_require__(71);
 
 function getEnglishVariant(v) {
   return simpleMerge(simpleClone(EnglishLocaleBaseDefinition), v);
@@ -6126,7 +6354,7 @@ function getEnglishVariant(v) {
 module.exports = getEnglishVariant;
 
 /***/ }),
-/* 107 */
+/* 108 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6138,13 +6366,13 @@ module.exports = {
 };
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var DateUnits = __webpack_require__(34),
+var DateUnits = __webpack_require__(35),
     DateUnitIndexes = __webpack_require__(9),
     isUndefined = __webpack_require__(6);
 
@@ -6165,7 +6393,7 @@ function iterateOverDateUnits(fn, startIndex, endIndex) {
 module.exports = iterateOverDateUnits;
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6175,27 +6403,27 @@ var MINUTES = __webpack_require__(172),
     ABBREVIATED_YEAR_REG = __webpack_require__(534),
     LocaleHelpers = __webpack_require__(10),
     DateUnitIndexes = __webpack_require__(9),
-    _utc = __webpack_require__(26),
+    _utc = __webpack_require__(27),
     trunc = __webpack_require__(15),
     forEach = __webpack_require__(7),
-    tzOffset = __webpack_require__(76),
+    tzOffset = __webpack_require__(77),
     isDefined = __webpack_require__(8),
     resetTime = __webpack_require__(173),
     getNewDate = __webpack_require__(62),
-    updateDate = __webpack_require__(77),
-    setWeekday = __webpack_require__(28),
-    simpleMerge = __webpack_require__(71),
+    updateDate = __webpack_require__(78),
+    setWeekday = __webpack_require__(29),
+    simpleMerge = __webpack_require__(72),
     advanceDate = __webpack_require__(63),
     isUndefined = __webpack_require__(6),
     classChecks = __webpack_require__(2),
     dateIsValid = __webpack_require__(64),
-    simpleClone = __webpack_require__(70),
+    simpleClone = __webpack_require__(71),
     isObjectType = __webpack_require__(12),
-    moveToEndOfUnit = __webpack_require__(79),
+    moveToEndOfUnit = __webpack_require__(80),
     deleteDateParam = __webpack_require__(544),
     coreUtilityAliases = __webpack_require__(4),
-    moveToBeginningOfUnit = __webpack_require__(80),
-    iterateOverDateParams = __webpack_require__(78),
+    moveToBeginningOfUnit = __webpack_require__(81),
+    iterateOverDateParams = __webpack_require__(79),
     getYearFromAbbreviation = __webpack_require__(545),
     iterateOverHigherDateParams = __webpack_require__(546);
 
@@ -6631,7 +6859,7 @@ function getExtendedDate(contextDate, d, opt, forceClone) {
 module.exports = getExtendedDate;
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6639,21 +6867,21 @@ module.exports = getExtendedDate;
 
 var DATE_OPTIONS = __webpack_require__(535),
     namespaceAliases = __webpack_require__(13),
-    defineOptionsAccessor = __webpack_require__(96);
+    defineOptionsAccessor = __webpack_require__(97);
 
 var sugarDate = namespaceAliases.sugarDate;
 
 module.exports = defineOptionsAccessor(sugarDate, DATE_OPTIONS);
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var setWeekday = __webpack_require__(28),
-    getWeekday = __webpack_require__(23),
+var setWeekday = __webpack_require__(29),
+    getWeekday = __webpack_require__(24),
     mathAliases = __webpack_require__(5);
 
 var floor = mathAliases.floor;
@@ -6666,7 +6894,7 @@ function moveToBeginningOfWeek(d, firstDayOfWeek) {
 module.exports = moveToBeginningOfWeek;
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6716,19 +6944,19 @@ function getTimeDistanceForUnit(d1, d2, unit) {
 module.exports = getTimeDistanceForUnit;
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-var ISODefaults = __webpack_require__(107),
+var ISODefaults = __webpack_require__(108),
     setDate = __webpack_require__(50),
     getDate = __webpack_require__(51),
     cloneDate = __webpack_require__(52),
     isUndefined = __webpack_require__(6),
     moveToEndOfWeek = __webpack_require__(178),
-    moveToBeginningOfWeek = __webpack_require__(111),
+    moveToBeginningOfWeek = __webpack_require__(112),
     moveToFirstDayOfWeekYear = __webpack_require__(176);
 
 var ISO_FIRST_DAY_OF_WEEK = ISODefaults.ISO_FIRST_DAY_OF_WEEK,
@@ -6764,7 +6992,7 @@ function getWeekNumber(d, allowPrevious, firstDayOfWeek, firstDayOfWeekYear) {
 module.exports = getWeekNumber;
 
 /***/ }),
-/* 114 */
+/* 115 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6773,7 +7001,7 @@ module.exports = getWeekNumber;
 module.exports = 'year|month|week|day|hour|minute|second|millisecond';
 
 /***/ }),
-/* 115 */
+/* 116 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6800,7 +7028,7 @@ function rangeClamp(range, obj) {
 module.exports = rangeClamp;
 
 /***/ }),
-/* 116 */
+/* 117 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -6904,234 +7132,6 @@ module.exports = defaults;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(204)))
 
 /***/ }),
-/* 117 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/*
-  MIT License http://www.opensource.org/licenses/mit-license.php
-  Author Tobias Koppers @sokra
-  Modified by Evan You @yyx990803
-*/
-
-var hasDocument = typeof document !== 'undefined'
-
-if (typeof DEBUG !== 'undefined' && DEBUG) {
-  if (!hasDocument) {
-    throw new Error(
-    'vue-style-loader cannot be used in a non-browser environment. ' +
-    "Use { target: 'node' } in your Webpack config to indicate a server-rendering environment."
-  ) }
-}
-
-var listToStyles = __webpack_require__(848)
-
-/*
-type StyleObject = {
-  id: number;
-  parts: Array<StyleObjectPart>
-}
-
-type StyleObjectPart = {
-  css: string;
-  media: string;
-  sourceMap: ?string
-}
-*/
-
-var stylesInDom = {/*
-  [id: number]: {
-    id: number,
-    refs: number,
-    parts: Array<(obj?: StyleObjectPart) => void>
-  }
-*/}
-
-var head = hasDocument && (document.head || document.getElementsByTagName('head')[0])
-var singletonElement = null
-var singletonCounter = 0
-var isProduction = false
-var noop = function () {}
-var options = null
-var ssrIdKey = 'data-vue-ssr-id'
-
-// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-// tags it will allow on a page
-var isOldIE = typeof navigator !== 'undefined' && /msie [6-9]\b/.test(navigator.userAgent.toLowerCase())
-
-module.exports = function (parentId, list, _isProduction, _options) {
-  isProduction = _isProduction
-
-  options = _options || {}
-
-  var styles = listToStyles(parentId, list)
-  addStylesToDom(styles)
-
-  return function update (newList) {
-    var mayRemove = []
-    for (var i = 0; i < styles.length; i++) {
-      var item = styles[i]
-      var domStyle = stylesInDom[item.id]
-      domStyle.refs--
-      mayRemove.push(domStyle)
-    }
-    if (newList) {
-      styles = listToStyles(parentId, newList)
-      addStylesToDom(styles)
-    } else {
-      styles = []
-    }
-    for (var i = 0; i < mayRemove.length; i++) {
-      var domStyle = mayRemove[i]
-      if (domStyle.refs === 0) {
-        for (var j = 0; j < domStyle.parts.length; j++) {
-          domStyle.parts[j]()
-        }
-        delete stylesInDom[domStyle.id]
-      }
-    }
-  }
-}
-
-function addStylesToDom (styles /* Array<StyleObject> */) {
-  for (var i = 0; i < styles.length; i++) {
-    var item = styles[i]
-    var domStyle = stylesInDom[item.id]
-    if (domStyle) {
-      domStyle.refs++
-      for (var j = 0; j < domStyle.parts.length; j++) {
-        domStyle.parts[j](item.parts[j])
-      }
-      for (; j < item.parts.length; j++) {
-        domStyle.parts.push(addStyle(item.parts[j]))
-      }
-      if (domStyle.parts.length > item.parts.length) {
-        domStyle.parts.length = item.parts.length
-      }
-    } else {
-      var parts = []
-      for (var j = 0; j < item.parts.length; j++) {
-        parts.push(addStyle(item.parts[j]))
-      }
-      stylesInDom[item.id] = { id: item.id, refs: 1, parts: parts }
-    }
-  }
-}
-
-function createStyleElement () {
-  var styleElement = document.createElement('style')
-  styleElement.type = 'text/css'
-  head.appendChild(styleElement)
-  return styleElement
-}
-
-function addStyle (obj /* StyleObjectPart */) {
-  var update, remove
-  var styleElement = document.querySelector('style[' + ssrIdKey + '~="' + obj.id + '"]')
-
-  if (styleElement) {
-    if (isProduction) {
-      // has SSR styles and in production mode.
-      // simply do nothing.
-      return noop
-    } else {
-      // has SSR styles but in dev mode.
-      // for some reason Chrome can't handle source map in server-rendered
-      // style tags - source maps in <style> only works if the style tag is
-      // created and inserted dynamically. So we remove the server rendered
-      // styles and inject new ones.
-      styleElement.parentNode.removeChild(styleElement)
-    }
-  }
-
-  if (isOldIE) {
-    // use singleton mode for IE9.
-    var styleIndex = singletonCounter++
-    styleElement = singletonElement || (singletonElement = createStyleElement())
-    update = applyToSingletonTag.bind(null, styleElement, styleIndex, false)
-    remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true)
-  } else {
-    // use multi-style-tag mode in all other cases
-    styleElement = createStyleElement()
-    update = applyToTag.bind(null, styleElement)
-    remove = function () {
-      styleElement.parentNode.removeChild(styleElement)
-    }
-  }
-
-  update(obj)
-
-  return function updateStyle (newObj /* StyleObjectPart */) {
-    if (newObj) {
-      if (newObj.css === obj.css &&
-          newObj.media === obj.media &&
-          newObj.sourceMap === obj.sourceMap) {
-        return
-      }
-      update(obj = newObj)
-    } else {
-      remove()
-    }
-  }
-}
-
-var replaceText = (function () {
-  var textStore = []
-
-  return function (index, replacement) {
-    textStore[index] = replacement
-    return textStore.filter(Boolean).join('\n')
-  }
-})()
-
-function applyToSingletonTag (styleElement, index, remove, obj) {
-  var css = remove ? '' : obj.css
-
-  if (styleElement.styleSheet) {
-    styleElement.styleSheet.cssText = replaceText(index, css)
-  } else {
-    var cssNode = document.createTextNode(css)
-    var childNodes = styleElement.childNodes
-    if (childNodes[index]) styleElement.removeChild(childNodes[index])
-    if (childNodes.length) {
-      styleElement.insertBefore(cssNode, childNodes[index])
-    } else {
-      styleElement.appendChild(cssNode)
-    }
-  }
-}
-
-function applyToTag (styleElement, obj) {
-  var css = obj.css
-  var media = obj.media
-  var sourceMap = obj.sourceMap
-
-  if (media) {
-    styleElement.setAttribute('media', media)
-  }
-  if (options.ssrId) {
-    styleElement.setAttribute(ssrIdKey, obj.id)
-  }
-
-  if (sourceMap) {
-    // https://developer.chrome.com/devtools/docs/javascript-debugging
-    // this makes source maps inside style tags work properly in Chrome
-    css += '\n/*# sourceURL=' + sourceMap.sources[0] + ' */'
-    // http://stackoverflow.com/a/26603875
-    css += '\n/*# sourceMappingURL=data:application/json;base64,' + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + ' */'
-  }
-
-  if (styleElement.styleSheet) {
-    styleElement.styleSheet.cssText = css
-  } else {
-    while (styleElement.firstChild) {
-      styleElement.removeChild(styleElement.firstChild)
-    }
-    styleElement.appendChild(document.createTextNode(css))
-  }
-}
-
-
-/***/ }),
 /* 118 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -7224,7 +7224,7 @@ module.exports = getNormalizedIndex;
 "use strict";
 
 
-var Inflections = __webpack_require__(66);
+var Inflections = __webpack_require__(67);
 
 function getAcronym(str) {
   // istanbul ignore next
@@ -7396,7 +7396,7 @@ module.exports = HTMLFromEntityMap;
 
 
 var STRING_FORMAT_REG = __webpack_require__(247),
-    CommonChars = __webpack_require__(24),
+    CommonChars = __webpack_require__(25),
     memoizeFunction = __webpack_require__(248);
 
 var OPEN_BRACE = CommonChars.OPEN_BRACE,
@@ -7548,7 +7548,7 @@ module.exports = stringReplaceAll;
 "use strict";
 
 
-var map = __webpack_require__(30),
+var map = __webpack_require__(31),
     classChecks = __webpack_require__(2),
     escapeRegExp = __webpack_require__(39),
     runTagReplacements = __webpack_require__(268);
@@ -7588,7 +7588,7 @@ module.exports = reverseString;
 "use strict";
 
 
-var stringUnderscore = __webpack_require__(67);
+var stringUnderscore = __webpack_require__(68);
 
 function stringSpacify(str) {
   return stringUnderscore(str).replace(/_/g, ' ');
@@ -7603,7 +7603,7 @@ module.exports = stringSpacify;
 "use strict";
 
 
-var CommonChars = __webpack_require__(24),
+var CommonChars = __webpack_require__(25),
     coreUtilityAliases = __webpack_require__(4),
     fullwidthNumberHelpers = __webpack_require__(134);
 
@@ -7633,7 +7633,7 @@ module.exports = stringToNumber;
 "use strict";
 
 
-var CommonChars = __webpack_require__(24),
+var CommonChars = __webpack_require__(25),
     chr = __webpack_require__(42),
     allCharsReg = __webpack_require__(135);
 
@@ -7728,7 +7728,7 @@ module.exports = truncateString;
 "use strict";
 
 
-var CommonChars = __webpack_require__(24);
+var CommonChars = __webpack_require__(25);
 
 var HALF_WIDTH_COMMA = CommonChars.HALF_WIDTH_COMMA;
 
@@ -7747,10 +7747,10 @@ module.exports = commaSplit;
 
 var classChecks = __webpack_require__(2),
     mathAliases = __webpack_require__(5),
-    periodSplit = __webpack_require__(87),
-    repeatString = __webpack_require__(89),
+    periodSplit = __webpack_require__(88),
+    repeatString = __webpack_require__(90),
     withPrecision = __webpack_require__(55),
-    _numberOptions = __webpack_require__(95);
+    _numberOptions = __webpack_require__(96);
 
 var isNumber = classChecks.isNumber,
     max = mathAliases.max;
@@ -8024,7 +8024,7 @@ module.exports = simpleRepeat;
 var forEach = __webpack_require__(7),
     arrayWrap = __webpack_require__(362),
     classChecks = __webpack_require__(2),
-    serializeInternal = __webpack_require__(73),
+    serializeInternal = __webpack_require__(74),
     coreUtilityAliases = __webpack_require__(4);
 
 var isArray = classChecks.isArray,
@@ -8073,7 +8073,7 @@ module.exports = isRealNaN;
 
 var forEach = __webpack_require__(7),
     mapWithShortcuts = __webpack_require__(46),
-    serializeInternal = __webpack_require__(73),
+    serializeInternal = __webpack_require__(74),
     coreUtilityAliases = __webpack_require__(4);
 
 var hasOwn = coreUtilityAliases.hasOwn;
@@ -8190,7 +8190,7 @@ module.exports = sum;
 "use strict";
 
 
-var getMatcher = __webpack_require__(25),
+var getMatcher = __webpack_require__(26),
     classChecks = __webpack_require__(2);
 
 var isFunction = classChecks.isFunction;
@@ -8286,8 +8286,8 @@ module.exports = Object.getOwnPropertyNames;
 
 
 var classChecks = __webpack_require__(2),
-    isPrimitive = __webpack_require__(31),
-    isPlainObject = __webpack_require__(65),
+    isPrimitive = __webpack_require__(32),
+    isPlainObject = __webpack_require__(66),
     getRegExpFlags = __webpack_require__(40),
     coreUtilityAliases = __webpack_require__(4);
 
@@ -8368,10 +8368,10 @@ module.exports = setQueryProperty;
 "use strict";
 
 
-var isEqual = __webpack_require__(72),
-    objectMerge = __webpack_require__(102),
+var isEqual = __webpack_require__(73),
+    objectMerge = __webpack_require__(103),
     isObjectType = __webpack_require__(12),
-    coercePrimitiveToObject = __webpack_require__(103);
+    coercePrimitiveToObject = __webpack_require__(104);
 
 function objectIntersectOrSubtract(obj1, obj2, subtract) {
   if (!isObjectType(obj1)) {
@@ -8457,7 +8457,7 @@ module.exports = sanitizeURIComponent;
 "use strict";
 
 
-var getEnglishVariant = __webpack_require__(106);
+var getEnglishVariant = __webpack_require__(107);
 
 var AmericanEnglishDefinition = getEnglishVariant({
   'mdy': true,
@@ -8537,9 +8537,9 @@ module.exports = getRegNonCapturing;
 "use strict";
 
 
-var getYear = __webpack_require__(35),
-    getMonth = __webpack_require__(36),
-    callDateGet = __webpack_require__(20);
+var getYear = __webpack_require__(36),
+    getMonth = __webpack_require__(37),
+    callDateGet = __webpack_require__(21);
 
 function getDaysInMonth(d) {
   return 32 - callDateGet(new Date(getYear(d), getMonth(d), 32), 'Date');
@@ -8555,7 +8555,7 @@ module.exports = getDaysInMonth;
 
 
 var mathAliases = __webpack_require__(5),
-    iterateOverDateUnits = __webpack_require__(108);
+    iterateOverDateUnits = __webpack_require__(109);
 
 var abs = mathAliases.abs;
 
@@ -8607,7 +8607,7 @@ module.exports = resetTime;
 "use strict";
 
 
-var DateUnits = __webpack_require__(34),
+var DateUnits = __webpack_require__(35),
     getLowerUnitIndex = __webpack_require__(61);
 
 function walkUnitDown(unitIndex, fn) {
@@ -8628,16 +8628,16 @@ module.exports = walkUnitDown;
 "use strict";
 
 
-var ISODefaults = __webpack_require__(107),
+var ISODefaults = __webpack_require__(108),
     getDate = __webpack_require__(51),
     setDate = __webpack_require__(50),
     setYear = __webpack_require__(540),
-    getYear = __webpack_require__(35),
-    getMonth = __webpack_require__(36),
+    getYear = __webpack_require__(36),
+    getMonth = __webpack_require__(37),
     setMonth = __webpack_require__(541),
     cloneDate = __webpack_require__(52),
-    getWeekday = __webpack_require__(23),
-    setWeekday = __webpack_require__(28),
+    getWeekday = __webpack_require__(24),
+    setWeekday = __webpack_require__(29),
     classChecks = __webpack_require__(2),
     moveToFirstDayOfWeekYear = __webpack_require__(176);
 
@@ -8671,7 +8671,7 @@ module.exports = setISOWeekNumber;
 var DateUnitIndexes = __webpack_require__(9),
     setDate = __webpack_require__(50),
     setUnitAndLowerToEdge = __webpack_require__(48),
-    moveToBeginningOfWeek = __webpack_require__(111);
+    moveToBeginningOfWeek = __webpack_require__(112);
 
 var MONTH_INDEX = DateUnitIndexes.MONTH_INDEX;
 
@@ -8707,8 +8707,8 @@ module.exports = getDateParamKey;
 "use strict";
 
 
-var setWeekday = __webpack_require__(28),
-    getWeekday = __webpack_require__(23),
+var setWeekday = __webpack_require__(29),
+    getWeekday = __webpack_require__(24),
     mathAliases = __webpack_require__(5);
 
 var ceil = mathAliases.ceil;
@@ -8729,17 +8729,17 @@ module.exports = moveToEndOfWeek;
 
 
 var MINUTES = __webpack_require__(172),
-    DateUnits = __webpack_require__(34),
+    DateUnits = __webpack_require__(35),
     DateUnitIndexes = __webpack_require__(9),
-    _utc = __webpack_require__(26),
-    tzOffset = __webpack_require__(76),
+    _utc = __webpack_require__(27),
+    tzOffset = __webpack_require__(77),
     cloneDate = __webpack_require__(52),
     isDefined = __webpack_require__(8),
     advanceDate = __webpack_require__(63),
     dateIsValid = __webpack_require__(64),
-    moveToEndOfUnit = __webpack_require__(79),
-    getExtendedDate = __webpack_require__(109),
-    moveToBeginningOfUnit = __webpack_require__(80);
+    moveToEndOfUnit = __webpack_require__(80),
+    getExtendedDate = __webpack_require__(110),
+    moveToBeginningOfUnit = __webpack_require__(81);
 
 var MONTH_INDEX = DateUnitIndexes.MONTH_INDEX;
 
@@ -8812,7 +8812,7 @@ module.exports = compareDate;
 "use strict";
 
 
-var updateDate = __webpack_require__(77),
+var updateDate = __webpack_require__(78),
     collectUpdateDateArguments = __webpack_require__(181);
 
 function advanceDateWithArgs(d, args, dir) {
@@ -8830,7 +8830,7 @@ module.exports = advanceDateWithArgs;
 
 
 var classChecks = __webpack_require__(2),
-    simpleClone = __webpack_require__(70),
+    simpleClone = __webpack_require__(71),
     isObjectType = __webpack_require__(12),
     getDateParamsFromString = __webpack_require__(646),
     collectDateParamsFromArguments = __webpack_require__(647);
@@ -8897,7 +8897,7 @@ module.exports = CoreOutputFormats;
 "use strict";
 
 
-var callDateGet = __webpack_require__(20);
+var callDateGet = __webpack_require__(21);
 
 function getHours(d) {
   return callDateGet(d, 'Hours');
@@ -8912,9 +8912,9 @@ module.exports = getHours;
 "use strict";
 
 
-var _utc = __webpack_require__(26),
+var _utc = __webpack_require__(27),
     trunc = __webpack_require__(15),
-    tzOffset = __webpack_require__(76),
+    tzOffset = __webpack_require__(77),
     padNumber = __webpack_require__(57),
     mathAliases = __webpack_require__(5);
 
@@ -8957,11 +8957,11 @@ module.exports = assertDateIsValid;
 
 var LocaleHelpers = __webpack_require__(10),
     trim = __webpack_require__(41),
-    getMonth = __webpack_require__(36),
+    getMonth = __webpack_require__(37),
     isDefined = __webpack_require__(8),
     getNewDate = __webpack_require__(62),
     compareDay = __webpack_require__(682),
-    getWeekday = __webpack_require__(23),
+    getWeekday = __webpack_require__(24),
     dateIsValid = __webpack_require__(64),
     classChecks = __webpack_require__(2),
     compareDate = __webpack_require__(179);
@@ -9119,7 +9119,7 @@ module.exports = getDateForRange;
 
 var MULTIPLIERS = __webpack_require__(193),
     callDateSet = __webpack_require__(49),
-    callDateGet = __webpack_require__(20);
+    callDateGet = __webpack_require__(21);
 
 function incrementDate(src, amount, unit) {
   var mult = MULTIPLIERS[unit], d;
@@ -9159,7 +9159,7 @@ module.exports = MULTIPLIERS;
 
 var DURATION_REG = __webpack_require__(757),
     classChecks = __webpack_require__(2),
-    simpleCapitalize = __webpack_require__(68);
+    simpleCapitalize = __webpack_require__(69);
 
 var isNumber = classChecks.isNumber;
 
@@ -9210,7 +9210,7 @@ module.exports = PrimitiveRangeConstructor;
 
 var Sugar = __webpack_require__(0),
     Range = __webpack_require__(11),
-    rangeEvery = __webpack_require__(81);
+    rangeEvery = __webpack_require__(82);
 
 Sugar.Number.defineInstance({
 
@@ -9277,7 +9277,7 @@ module.exports = privatePropertyAccessor('canceled');
 "use strict";
 
 
-var setDelay = __webpack_require__(83),
+var setDelay = __webpack_require__(84),
     mathAliases = __webpack_require__(5);
 
 var max = mathAliases.max,
@@ -9815,7 +9815,7 @@ module.exports = Cancel;
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(210);
-module.exports = __webpack_require__(869);
+module.exports = __webpack_require__(883);
 
 
 /***/ }),
@@ -9852,14 +9852,14 @@ window.loaded = function () {
 
 Vue.component('dashboard-manager', __webpack_require__(836));
 Vue.component('teams', __webpack_require__(839));
-Vue.component('players', __webpack_require__(879));
-Vue.component('invites', __webpack_require__(842));
-Vue.component('avatar-upload', __webpack_require__(845));
-Vue.component('prepend', __webpack_require__(861));
-Vue.component('tags', __webpack_require__(864));
-Vue.component('faqs', __webpack_require__(882));
-Vue.component('sponsors', __webpack_require__(885));
-Vue.component('youtube-videos', __webpack_require__(874));
+Vue.component('players', __webpack_require__(842));
+Vue.component('invites', __webpack_require__(845));
+Vue.component('avatar-upload', __webpack_require__(848));
+Vue.component('prepend', __webpack_require__(864));
+Vue.component('tags', __webpack_require__(867));
+Vue.component('faqs', __webpack_require__(872));
+Vue.component('sponsors', __webpack_require__(875));
+Vue.component('youtube-videos', __webpack_require__(878));
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -10203,8 +10203,8 @@ module.exports = Sugar.String.camelize;
 
 var CAMELIZE_REG = __webpack_require__(222),
     getAcronym = __webpack_require__(123),
-    stringUnderscore = __webpack_require__(67),
-    stringCapitalize = __webpack_require__(85);
+    stringUnderscore = __webpack_require__(68),
+    stringCapitalize = __webpack_require__(86);
 
 function stringCamelize(str, upper) {
   str = stringUnderscore(str);
@@ -10247,7 +10247,7 @@ module.exports = /[^\u0000-\u0040\u005B-\u0060\u007B-\u007F]+('s)?/g;
 
 
 var Sugar = __webpack_require__(0),
-    stringCapitalize = __webpack_require__(85);
+    stringCapitalize = __webpack_require__(86);
 
 Sugar.String.defineInstance({
 
@@ -10351,7 +10351,7 @@ module.exports = Sugar.String.compact;
 
 
 var Sugar = __webpack_require__(0),
-    stringUnderscore = __webpack_require__(67);
+    stringUnderscore = __webpack_require__(68);
 
 Sugar.String.defineInstance({
 
@@ -12616,7 +12616,7 @@ module.exports = Sugar.String.format;
 "use strict";
 
 
-var deepGetProperty = __webpack_require__(69),
+var deepGetProperty = __webpack_require__(70),
     createFormatMatcher = __webpack_require__(127);
 
 module.exports = createFormatMatcher(deepGetProperty);
@@ -12656,7 +12656,7 @@ module.exports = assertArray;
 "use strict";
 
 
-var isPrimitive = __webpack_require__(31);
+var isPrimitive = __webpack_require__(32);
 
 function assertWritable(obj) {
   if (isPrimitive(obj)) {
@@ -12747,9 +12747,9 @@ module.exports = Sugar.String.from;
 
 
 var Sugar = __webpack_require__(0),
-    ENHANCEMENTS_FLAG = __webpack_require__(32),
+    ENHANCEMENTS_FLAG = __webpack_require__(33),
     STRING_ENHANCEMENTS_FLAG = __webpack_require__(252),
-    fixArgumentLength = __webpack_require__(21),
+    fixArgumentLength = __webpack_require__(22),
     callIncludesWithRegexSupport = __webpack_require__(253);
 
 Sugar.String.defineInstance({
@@ -12913,7 +12913,7 @@ module.exports = Sugar.String.lines;
 
 
 var Sugar = __webpack_require__(0),
-    padString = __webpack_require__(88),
+    padString = __webpack_require__(89),
     mathAliases = __webpack_require__(5),
     coercePositiveInteger = __webpack_require__(43);
 
@@ -12944,7 +12944,7 @@ module.exports = Sugar.String.pad;
 
 
 var Sugar = __webpack_require__(0),
-    padString = __webpack_require__(88),
+    padString = __webpack_require__(89),
     mathAliases = __webpack_require__(5),
     coercePositiveInteger = __webpack_require__(43);
 
@@ -12969,7 +12969,7 @@ module.exports = Sugar.String.padLeft;
 
 
 var Sugar = __webpack_require__(0),
-    padString = __webpack_require__(88),
+    padString = __webpack_require__(89),
     mathAliases = __webpack_require__(5),
     coercePositiveInteger = __webpack_require__(43);
 
@@ -13182,7 +13182,7 @@ module.exports = runTagReplacements;
 
 
 var HTML_VOID_ELEMENTS = __webpack_require__(270),
-    indexOf = __webpack_require__(90);
+    indexOf = __webpack_require__(91);
 
 function tagIsVoid(tag) {
   return indexOf(HTML_VOID_ELEMENTS, tag.toLowerCase()) !== -1;
@@ -13338,13 +13338,13 @@ module.exports = Sugar.String.titleize;
 
 
 var DOWNCASED_WORDS = __webpack_require__(278),
-    indexOf = __webpack_require__(90),
+    indexOf = __webpack_require__(91),
     eachWord = __webpack_require__(279),
     getAcronym = __webpack_require__(123),
     getHumanWord = __webpack_require__(280),
     runHumanRules = __webpack_require__(281),
     stringSpacify = __webpack_require__(132),
-    stringCapitalize = __webpack_require__(85);
+    stringCapitalize = __webpack_require__(86);
 
 function stringTitleize(str) {
   var fullStopPunctuation = /[.:;!]$/, lastHadPunctuation;
@@ -13406,7 +13406,7 @@ module.exports = eachWord;
 "use strict";
 
 
-var Inflections = __webpack_require__(66);
+var Inflections = __webpack_require__(67);
 
 function getHumanWord(str) {
   // istanbul ignore next
@@ -13422,7 +13422,7 @@ module.exports = getHumanWord;
 "use strict";
 
 
-var Inflections = __webpack_require__(66);
+var Inflections = __webpack_require__(67);
 
 function runHumanRules(str) {
   // istanbul ignore next
@@ -13500,7 +13500,7 @@ module.exports = Sugar.String.trimLeft;
 "use strict";
 
 
-var TRIM_CHARS = __webpack_require__(91);
+var TRIM_CHARS = __webpack_require__(92);
 
 module.exports = RegExp('^['+ TRIM_CHARS +']+');
 
@@ -13531,7 +13531,7 @@ module.exports = Sugar.String.trimRight;
 "use strict";
 
 
-var TRIM_CHARS = __webpack_require__(91);
+var TRIM_CHARS = __webpack_require__(92);
 
 module.exports = RegExp('['+ TRIM_CHARS +']+$');
 
@@ -13563,7 +13563,7 @@ module.exports = Sugar.String.truncate;
 
 
 var TRUNC_REG = __webpack_require__(290),
-    filter = __webpack_require__(92),
+    filter = __webpack_require__(93),
     reverseString = __webpack_require__(131);
 
 function truncateOnWord(str, limit, fromLeft) {
@@ -13587,7 +13587,7 @@ module.exports = truncateOnWord;
 "use strict";
 
 
-var TRIM_CHARS = __webpack_require__(91);
+var TRIM_CHARS = __webpack_require__(92);
 
 module.exports = RegExp('(?=[' + TRIM_CHARS + '])');
 
@@ -13619,7 +13619,7 @@ module.exports = Sugar.String.truncateOnWord;
 
 
 var Sugar = __webpack_require__(0),
-    stringUnderscore = __webpack_require__(67);
+    stringUnderscore = __webpack_require__(68);
 
 Sugar.String.defineInstance({
 
@@ -13803,8 +13803,8 @@ module.exports = Sugar.Number.random;
 
 
 var Sugar = __webpack_require__(0),
-    AbbreviationUnits = __webpack_require__(93),
-    abbreviateNumber = __webpack_require__(94);
+    AbbreviationUnits = __webpack_require__(94),
+    abbreviateNumber = __webpack_require__(95);
 
 var BASIC_UNITS = AbbreviationUnits.BASIC_UNITS;
 
@@ -13825,7 +13825,7 @@ module.exports = Sugar.Number.abbr;
 "use strict";
 
 
-var CommonChars = __webpack_require__(24);
+var CommonChars = __webpack_require__(25);
 
 var HALF_WIDTH_PERIOD = CommonChars.HALF_WIDTH_PERIOD,
     HALF_WIDTH_COMMA = CommonChars.HALF_WIDTH_COMMA;
@@ -13863,7 +13863,7 @@ module.exports = defineAccessor;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(18);
+__webpack_require__(19);
 
 module.exports = Sugar.Number.abs;
 
@@ -13917,7 +13917,7 @@ module.exports = wrapNamespace;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(18);
+__webpack_require__(19);
 
 module.exports = Sugar.Number.acos;
 
@@ -13930,7 +13930,7 @@ module.exports = Sugar.Number.acos;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(18);
+__webpack_require__(19);
 
 module.exports = Sugar.Number.asin;
 
@@ -13943,7 +13943,7 @@ module.exports = Sugar.Number.asin;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(18);
+__webpack_require__(19);
 
 module.exports = Sugar.Number.atan;
 
@@ -13955,8 +13955,8 @@ module.exports = Sugar.Number.atan;
 
 
 var Sugar = __webpack_require__(0),
-    AbbreviationUnits = __webpack_require__(93),
-    abbreviateNumber = __webpack_require__(94);
+    AbbreviationUnits = __webpack_require__(94),
+    abbreviateNumber = __webpack_require__(95);
 
 var MEMORY_UNITS = AbbreviationUnits.MEMORY_UNITS,
     MEMORY_BINARY_UNITS = AbbreviationUnits.MEMORY_BINARY_UNITS;
@@ -13985,7 +13985,7 @@ module.exports = Sugar.Number.bytes;
 
 var Sugar = __webpack_require__(0),
     mathAliases = __webpack_require__(5),
-    createRoundingFunction = __webpack_require__(98);
+    createRoundingFunction = __webpack_require__(99);
 
 var ceil = mathAliases.ceil;
 
@@ -14026,7 +14026,7 @@ module.exports = Sugar.Number.chr;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(18);
+__webpack_require__(19);
 
 module.exports = Sugar.Number.cos;
 
@@ -14039,7 +14039,7 @@ module.exports = Sugar.Number.cos;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(18);
+__webpack_require__(19);
 
 module.exports = Sugar.Number.exp;
 
@@ -14052,7 +14052,7 @@ module.exports = Sugar.Number.exp;
 
 var Sugar = __webpack_require__(0),
     mathAliases = __webpack_require__(5),
-    createRoundingFunction = __webpack_require__(98);
+    createRoundingFunction = __webpack_require__(99);
 
 var floor = mathAliases.floor;
 
@@ -14112,7 +14112,7 @@ module.exports = Sugar.Number.hex;
 
 
 var Sugar = __webpack_require__(0),
-    isMultipleOf = __webpack_require__(99);
+    isMultipleOf = __webpack_require__(100);
 
 Sugar.Number.defineInstance({
 
@@ -14152,7 +14152,7 @@ module.exports = Sugar.Number.isInteger;
 
 
 var Sugar = __webpack_require__(0),
-    isMultipleOf = __webpack_require__(99);
+    isMultipleOf = __webpack_require__(100);
 
 Sugar.Number.defineInstance({
 
@@ -14173,7 +14173,7 @@ module.exports = Sugar.Number.isMultipleOf;
 
 var Sugar = __webpack_require__(0),
     isInteger = __webpack_require__(140),
-    isMultipleOf = __webpack_require__(99);
+    isMultipleOf = __webpack_require__(100);
 
 Sugar.Number.defineInstance({
 
@@ -14212,8 +14212,8 @@ module.exports = Sugar.Number.log;
 
 
 var Sugar = __webpack_require__(0),
-    AbbreviationUnits = __webpack_require__(93),
-    abbreviateNumber = __webpack_require__(94);
+    AbbreviationUnits = __webpack_require__(94),
+    abbreviateNumber = __webpack_require__(95);
 
 var METRIC_UNITS_SHORT = AbbreviationUnits.METRIC_UNITS_SHORT,
     METRIC_UNITS_FULL = AbbreviationUnits.METRIC_UNITS_FULL;
@@ -14286,7 +14286,7 @@ module.exports = Sugar.Number.pad;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(18);
+__webpack_require__(19);
 
 module.exports = Sugar.Number.pow;
 
@@ -14299,7 +14299,7 @@ module.exports = Sugar.Number.pow;
 
 var Sugar = __webpack_require__(0),
     mathAliases = __webpack_require__(5),
-    createRoundingFunction = __webpack_require__(98);
+    createRoundingFunction = __webpack_require__(99);
 
 var round = mathAliases.round;
 
@@ -14320,7 +14320,7 @@ module.exports = Sugar.Number.round;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(18);
+__webpack_require__(19);
 
 module.exports = Sugar.Number.sin;
 
@@ -14333,7 +14333,7 @@ module.exports = Sugar.Number.sin;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(18);
+__webpack_require__(19);
 
 module.exports = Sugar.Number.sqrt;
 
@@ -14346,7 +14346,7 @@ module.exports = Sugar.Number.sqrt;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(18);
+__webpack_require__(19);
 
 module.exports = Sugar.Number.tan;
 
@@ -14407,7 +14407,7 @@ module.exports = Sugar.Number.toNumber;
 
 
 var Sugar = __webpack_require__(0),
-    _numberOptions = __webpack_require__(95);
+    _numberOptions = __webpack_require__(96);
 
 module.exports = Sugar.Number.getOption;
 
@@ -14419,7 +14419,7 @@ module.exports = Sugar.Number.getOption;
 
 
 var Sugar = __webpack_require__(0),
-    _numberOptions = __webpack_require__(95);
+    _numberOptions = __webpack_require__(96);
 
 module.exports = Sugar.Number.setOption;
 
@@ -14651,7 +14651,7 @@ module.exports = Sugar.Array.compact;
 "use strict";
 
 
-var filter = __webpack_require__(92);
+var filter = __webpack_require__(93);
 
 function arrayCompact(arr, all) {
   return filter(arr, function(el) {
@@ -14688,7 +14688,7 @@ module.exports = Sugar.Array.exclude;
 "use strict";
 
 
-var getMatcher = __webpack_require__(25);
+var getMatcher = __webpack_require__(26);
 
 function arrayExclude(arr, f) {
   var result = [], matcher = getMatcher(f);
@@ -14741,7 +14741,7 @@ module.exports = regexMatcher;
 "use strict";
 
 
-var isEqual = __webpack_require__(72);
+var isEqual = __webpack_require__(73);
 
 function defaultMatcher(f) {
   return function(el) {
@@ -15075,7 +15075,7 @@ module.exports = Sugar.Array.isEmpty;
 
 
 var Sugar = __webpack_require__(0),
-    isEqual = __webpack_require__(72);
+    isEqual = __webpack_require__(73);
 
 Sugar.Array.defineInstance({
 
@@ -15136,7 +15136,7 @@ module.exports = Sugar.Array.remove;
 "use strict";
 
 
-var getMatcher = __webpack_require__(25);
+var getMatcher = __webpack_require__(26);
 
 function arrayRemove(arr, f) {
   var matcher = getMatcher(f), i = 0;
@@ -15298,7 +15298,7 @@ module.exports = Sugar.Array.sortBy;
 "use strict";
 
 
-var ARRAY_OPTIONS = __webpack_require__(100),
+var ARRAY_OPTIONS = __webpack_require__(101),
     classChecks = __webpack_require__(2);
 
 var isString = classChecks.isString,
@@ -15337,7 +15337,7 @@ module.exports = compareValue;
 "use strict";
 
 
-var map = __webpack_require__(30);
+var map = __webpack_require__(31);
 
 function getSortOrder() {
   var order = 'AÁÀÂÃĄBCĆČÇDĎÐEÉÈĚÊËĘFGĞHıIÍÌİÎÏJKLŁMNŃŇÑOÓÒÔPQRŘSŚŠŞTŤUÚÙŮÛÜVWXYÝZŹŻŽÞÆŒØÕÅÄÖ';
@@ -15357,7 +15357,7 @@ module.exports = getSortOrder;
 
 var HALF_WIDTH_NINE = __webpack_require__(376),
     FULL_WIDTH_NINE = __webpack_require__(377),
-    CommonChars = __webpack_require__(24);
+    CommonChars = __webpack_require__(25);
 
 var HALF_WIDTH_ZERO = CommonChars.HALF_WIDTH_ZERO,
     FULL_WIDTH_ZERO = CommonChars.FULL_WIDTH_ZERO;
@@ -15609,7 +15609,7 @@ module.exports = Sugar.Array.unique;
 
 
 var Sugar = __webpack_require__(0),
-    map = __webpack_require__(30);
+    map = __webpack_require__(31);
 
 Sugar.Array.defineInstanceWithArguments({
 
@@ -15647,7 +15647,7 @@ module.exports = Sugar.Array.insert;
 
 
 var Sugar = __webpack_require__(0),
-    ARRAY_OPTIONS = __webpack_require__(100);
+    ARRAY_OPTIONS = __webpack_require__(101);
 
 var _arrayOptions = ARRAY_OPTIONS._arrayOptions;
 
@@ -15661,7 +15661,7 @@ module.exports = Sugar.Array.getOption;
 
 
 var Sugar = __webpack_require__(0),
-    ARRAY_OPTIONS = __webpack_require__(100);
+    ARRAY_OPTIONS = __webpack_require__(101);
 
 var _arrayOptions = ARRAY_OPTIONS._arrayOptions;
 
@@ -15767,7 +15767,7 @@ module.exports = Sugar.Object.count;
 "use strict";
 
 
-var getMatcher = __webpack_require__(25),
+var getMatcher = __webpack_require__(26),
     coreUtilityAliases = __webpack_require__(4);
 
 var forEachProperty = coreUtilityAliases.forEachProperty;
@@ -15792,7 +15792,7 @@ module.exports = objectCount;
 
 
 var Sugar = __webpack_require__(0),
-    objectMatchers = __webpack_require__(74);
+    objectMatchers = __webpack_require__(75);
 
 var objectEvery = objectMatchers.objectEvery;
 
@@ -15812,7 +15812,7 @@ module.exports = Sugar.Object.every;
 
 
 var getKeys = __webpack_require__(45),
-    getMatcher = __webpack_require__(25);
+    getMatcher = __webpack_require__(26);
 
 function wrapObjectMatcher(name) {
   var nativeFn = Array.prototype[name];
@@ -15853,7 +15853,7 @@ module.exports = Sugar.Object.filter;
 "use strict";
 
 
-var getMatcher = __webpack_require__(25),
+var getMatcher = __webpack_require__(26),
     coreUtilityAliases = __webpack_require__(4);
 
 var forEachProperty = coreUtilityAliases.forEachProperty;
@@ -15878,7 +15878,7 @@ module.exports = objectFilter;
 
 
 var Sugar = __webpack_require__(0),
-    objectMatchers = __webpack_require__(74);
+    objectMatchers = __webpack_require__(75);
 
 var objectFind = objectMatchers.objectFind;
 
@@ -15959,7 +15959,7 @@ module.exports = assertCallable;
 
 
 var Sugar = __webpack_require__(0),
-    getLeastOrMost = __webpack_require__(75);
+    getLeastOrMost = __webpack_require__(76);
 
 Sugar.Object.defineInstanceAndStatic({
 
@@ -16081,7 +16081,7 @@ module.exports = Sugar.Object.min;
 
 
 var Sugar = __webpack_require__(0),
-    getLeastOrMost = __webpack_require__(75);
+    getLeastOrMost = __webpack_require__(76);
 
 Sugar.Object.defineInstanceAndStatic({
 
@@ -16120,7 +16120,7 @@ module.exports = Sugar.Object.none;
 "use strict";
 
 
-var objectMatchers = __webpack_require__(74);
+var objectMatchers = __webpack_require__(75);
 
 var objectSome = objectMatchers.objectSome;
 
@@ -16185,7 +16185,7 @@ module.exports = objectReduce;
 
 
 var Sugar = __webpack_require__(0),
-    objectMatchers = __webpack_require__(74);
+    objectMatchers = __webpack_require__(75);
 
 var objectSome = objectMatchers.objectSome;
 
@@ -16246,7 +16246,7 @@ module.exports = Sugar.Array.average;
 
 var Sugar = __webpack_require__(0),
     arrayCount = __webpack_require__(420),
-    fixArgumentLength = __webpack_require__(21);
+    fixArgumentLength = __webpack_require__(22);
 
 Sugar.Array.defineInstance({
 
@@ -16264,7 +16264,7 @@ module.exports = Sugar.Array.count;
 
 
 var isUndefined = __webpack_require__(6),
-    enhancedMatcherMethods = __webpack_require__(33);
+    enhancedMatcherMethods = __webpack_require__(34);
 
 var enhancedFilter = enhancedMatcherMethods.enhancedFilter;
 
@@ -16301,10 +16301,10 @@ module.exports = buildEnhancedMatching;
 
 
 var Sugar = __webpack_require__(0),
-    ENHANCEMENTS_FLAG = __webpack_require__(32),
+    ENHANCEMENTS_FLAG = __webpack_require__(33),
     ARRAY_ENHANCEMENTS_FLAG = __webpack_require__(47),
-    fixArgumentLength = __webpack_require__(21),
-    enhancedMatcherMethods = __webpack_require__(33);
+    fixArgumentLength = __webpack_require__(22),
+    enhancedMatcherMethods = __webpack_require__(34);
 
 var enhancedEvery = enhancedMatcherMethods.enhancedEvery;
 
@@ -16325,7 +16325,7 @@ module.exports = Sugar.Array.every;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(22);
+__webpack_require__(23);
 
 module.exports = Sugar.Array.everyFromIndex;
 
@@ -16346,7 +16346,7 @@ var forEach = __webpack_require__(7),
     enhancedMatching = __webpack_require__(155),
     getNormalizedIndex = __webpack_require__(122),
     coreUtilityAliases = __webpack_require__(4),
-    methodDefineAliases = __webpack_require__(97);
+    methodDefineAliases = __webpack_require__(98);
 
 var forEachProperty = coreUtilityAliases.forEachProperty,
     defineInstanceWithArguments = methodDefineAliases.defineInstanceWithArguments,
@@ -16514,10 +16514,10 @@ module.exports = buildFromIndexMethods;
 
 
 var Sugar = __webpack_require__(0),
-    ENHANCEMENTS_FLAG = __webpack_require__(32),
+    ENHANCEMENTS_FLAG = __webpack_require__(33),
     ARRAY_ENHANCEMENTS_FLAG = __webpack_require__(47),
-    fixArgumentLength = __webpack_require__(21),
-    enhancedMatcherMethods = __webpack_require__(33);
+    fixArgumentLength = __webpack_require__(22),
+    enhancedMatcherMethods = __webpack_require__(34);
 
 var enhancedFilter = enhancedMatcherMethods.enhancedFilter;
 
@@ -16538,7 +16538,7 @@ module.exports = Sugar.Array.filter;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(22);
+__webpack_require__(23);
 
 module.exports = Sugar.Array.filterFromIndex;
 
@@ -16550,10 +16550,10 @@ module.exports = Sugar.Array.filterFromIndex;
 
 
 var Sugar = __webpack_require__(0),
-    ENHANCEMENTS_FLAG = __webpack_require__(32),
+    ENHANCEMENTS_FLAG = __webpack_require__(33),
     ARRAY_ENHANCEMENTS_FLAG = __webpack_require__(47),
-    fixArgumentLength = __webpack_require__(21),
-    enhancedMatcherMethods = __webpack_require__(33);
+    fixArgumentLength = __webpack_require__(22),
+    enhancedMatcherMethods = __webpack_require__(34);
 
 var enhancedFind = enhancedMatcherMethods.enhancedFind;
 
@@ -16574,7 +16574,7 @@ module.exports = Sugar.Array.find;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(22);
+__webpack_require__(23);
 
 module.exports = Sugar.Array.findFromIndex;
 
@@ -16586,10 +16586,10 @@ module.exports = Sugar.Array.findFromIndex;
 
 
 var Sugar = __webpack_require__(0),
-    ENHANCEMENTS_FLAG = __webpack_require__(32),
+    ENHANCEMENTS_FLAG = __webpack_require__(33),
     ARRAY_ENHANCEMENTS_FLAG = __webpack_require__(47),
-    fixArgumentLength = __webpack_require__(21),
-    enhancedMatcherMethods = __webpack_require__(33);
+    fixArgumentLength = __webpack_require__(22),
+    enhancedMatcherMethods = __webpack_require__(34);
 
 var enhancedFindIndex = enhancedMatcherMethods.enhancedFindIndex;
 
@@ -16610,7 +16610,7 @@ module.exports = Sugar.Array.findIndex;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(22);
+__webpack_require__(23);
 
 module.exports = Sugar.Array.findIndexFromIndex;
 
@@ -16623,7 +16623,7 @@ module.exports = Sugar.Array.findIndexFromIndex;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(22);
+__webpack_require__(23);
 
 module.exports = Sugar.Array.forEachFromIndex;
 
@@ -16635,7 +16635,7 @@ module.exports = Sugar.Array.forEachFromIndex;
 
 
 var Sugar = __webpack_require__(0),
-    getLeastOrMost = __webpack_require__(75);
+    getLeastOrMost = __webpack_require__(76);
 
 Sugar.Array.defineInstance({
 
@@ -16655,10 +16655,10 @@ module.exports = Sugar.Array.least;
 
 
 var Sugar = __webpack_require__(0),
-    ENHANCEMENTS_FLAG = __webpack_require__(32),
+    ENHANCEMENTS_FLAG = __webpack_require__(33),
     ARRAY_ENHANCEMENTS_FLAG = __webpack_require__(47),
     enhancedMap = __webpack_require__(434),
-    fixArgumentLength = __webpack_require__(21);
+    fixArgumentLength = __webpack_require__(22);
 
 Sugar.Array.defineInstance({
 
@@ -16704,7 +16704,7 @@ module.exports = buildEnhancedMapping;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(22);
+__webpack_require__(23);
 
 module.exports = Sugar.Array.mapFromIndex;
 
@@ -16776,7 +16776,7 @@ module.exports = Sugar.Array.min;
 
 
 var Sugar = __webpack_require__(0),
-    getLeastOrMost = __webpack_require__(75);
+    getLeastOrMost = __webpack_require__(76);
 
 Sugar.Array.defineInstance({
 
@@ -16797,7 +16797,7 @@ module.exports = Sugar.Array.most;
 
 var Sugar = __webpack_require__(0),
     arrayNone = __webpack_require__(442),
-    fixArgumentLength = __webpack_require__(21);
+    fixArgumentLength = __webpack_require__(22);
 
 Sugar.Array.defineInstance({
 
@@ -16814,7 +16814,7 @@ module.exports = Sugar.Array.none;
 "use strict";
 
 
-var enhancedMatcherMethods = __webpack_require__(33);
+var enhancedMatcherMethods = __webpack_require__(34);
 
 var enhancedSome = enhancedMatcherMethods.enhancedSome;
 
@@ -16833,7 +16833,7 @@ module.exports = arrayNone;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(22);
+__webpack_require__(23);
 
 module.exports = Sugar.Array.reduceFromIndex;
 
@@ -16846,7 +16846,7 @@ module.exports = Sugar.Array.reduceFromIndex;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(22);
+__webpack_require__(23);
 
 module.exports = Sugar.Array.reduceRightFromIndex;
 
@@ -16858,10 +16858,10 @@ module.exports = Sugar.Array.reduceRightFromIndex;
 
 
 var Sugar = __webpack_require__(0),
-    ENHANCEMENTS_FLAG = __webpack_require__(32),
+    ENHANCEMENTS_FLAG = __webpack_require__(33),
     ARRAY_ENHANCEMENTS_FLAG = __webpack_require__(47),
-    fixArgumentLength = __webpack_require__(21),
-    enhancedMatcherMethods = __webpack_require__(33);
+    fixArgumentLength = __webpack_require__(22),
+    enhancedMatcherMethods = __webpack_require__(34);
 
 var enhancedSome = enhancedMatcherMethods.enhancedSome;
 
@@ -16882,7 +16882,7 @@ module.exports = Sugar.Array.some;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(22);
+__webpack_require__(23);
 
 module.exports = Sugar.Array.someFromIndex;
 
@@ -16963,8 +16963,8 @@ module.exports = __webpack_require__(0);
 
 
 var Sugar = __webpack_require__(0),
-    clone = __webpack_require__(101),
-    mergeWithOptions = __webpack_require__(104);
+    clone = __webpack_require__(102),
+    mergeWithOptions = __webpack_require__(105);
 
 Sugar.Object.defineInstanceAndStatic({
 
@@ -17089,8 +17089,8 @@ module.exports = mergeByPropertyDescriptor;
 
 
 var Sugar = __webpack_require__(0),
-    clone = __webpack_require__(101),
-    mergeAll = __webpack_require__(105);
+    clone = __webpack_require__(102),
+    mergeAll = __webpack_require__(106);
 
 Sugar.Object.defineInstanceAndStatic({
 
@@ -17110,7 +17110,7 @@ module.exports = Sugar.Object.addAll;
 
 
 var Sugar = __webpack_require__(0),
-    clone = __webpack_require__(101);
+    clone = __webpack_require__(102);
 
 Sugar.Object.defineInstanceAndStatic({
 
@@ -17149,7 +17149,7 @@ module.exports = Sugar.Object.defaults;
 "use strict";
 
 
-var mergeAll = __webpack_require__(105);
+var mergeAll = __webpack_require__(106);
 
 function defaults(target, sources, opts) {
   opts = opts || {};
@@ -17186,7 +17186,7 @@ module.exports = Sugar.Object.exclude;
 "use strict";
 
 
-var getMatcher = __webpack_require__(25),
+var getMatcher = __webpack_require__(26),
     coreUtilityAliases = __webpack_require__(4);
 
 var forEachProperty = coreUtilityAliases.forEachProperty;
@@ -17400,7 +17400,7 @@ module.exports = parseDeepQueryComponent;
 
 
 var Sugar = __webpack_require__(0),
-    deepGetProperty = __webpack_require__(69);
+    deepGetProperty = __webpack_require__(70);
 
 Sugar.Object.defineInstanceAndStatic({
 
@@ -17439,7 +17439,7 @@ module.exports = Sugar.Object.has;
 "use strict";
 
 
-var handleDeepProperty = __webpack_require__(86);
+var handleDeepProperty = __webpack_require__(87);
 
 function deepHasProperty(obj, key, any) {
   return handleDeepProperty(obj, key, any, true);
@@ -17548,7 +17548,7 @@ module.exports = isArguments;
 "use strict";
 
 
-var isPrimitive = __webpack_require__(31);
+var isPrimitive = __webpack_require__(32);
 
 function hasProperty(obj, prop) {
   return !isPrimitive(obj) && prop in obj;
@@ -17565,7 +17565,7 @@ module.exports = hasProperty;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(19);
+__webpack_require__(20);
 
 module.exports = Sugar.Object.isArray;
 
@@ -17609,7 +17609,7 @@ module.exports = buildClassCheckMethods;
 "use strict";
 
 
-var methodDefineAliases = __webpack_require__(97),
+var methodDefineAliases = __webpack_require__(98),
     collectSimilarMethods = __webpack_require__(139);
 
 var defineInstanceAndStatic = methodDefineAliases.defineInstanceAndStatic;
@@ -17629,7 +17629,7 @@ module.exports = defineInstanceAndStaticSimilar;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(19);
+__webpack_require__(20);
 
 module.exports = Sugar.Object.isBoolean;
 
@@ -17642,7 +17642,7 @@ module.exports = Sugar.Object.isBoolean;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(19);
+__webpack_require__(20);
 
 module.exports = Sugar.Object.isDate;
 
@@ -17674,7 +17674,7 @@ module.exports = Sugar.Object.isEmpty;
 
 
 var getKeys = __webpack_require__(45),
-    coercePrimitiveToObject = __webpack_require__(103);
+    coercePrimitiveToObject = __webpack_require__(104);
 
 function getKeysWithObjectCoercion(obj) {
   return getKeys(coercePrimitiveToObject(obj));
@@ -17690,7 +17690,7 @@ module.exports = getKeysWithObjectCoercion;
 
 
 var Sugar = __webpack_require__(0),
-    isEqual = __webpack_require__(72);
+    isEqual = __webpack_require__(73);
 
 Sugar.Object.defineInstanceAndStatic({
 
@@ -17711,7 +17711,7 @@ module.exports = Sugar.Object.isEqual;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(19);
+__webpack_require__(20);
 
 module.exports = Sugar.Object.isError;
 
@@ -17724,7 +17724,7 @@ module.exports = Sugar.Object.isError;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(19);
+__webpack_require__(20);
 
 module.exports = Sugar.Object.isFunction;
 
@@ -17737,7 +17737,7 @@ module.exports = Sugar.Object.isFunction;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(19);
+__webpack_require__(20);
 
 module.exports = Sugar.Object.isMap;
 
@@ -17750,7 +17750,7 @@ module.exports = Sugar.Object.isMap;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(19);
+__webpack_require__(20);
 
 module.exports = Sugar.Object.isNumber;
 
@@ -17762,7 +17762,7 @@ module.exports = Sugar.Object.isNumber;
 
 
 var Sugar = __webpack_require__(0),
-    isPlainObject = __webpack_require__(65);
+    isPlainObject = __webpack_require__(66);
 
 Sugar.Object.defineInstanceAndStatic({
 
@@ -17783,7 +17783,7 @@ module.exports = Sugar.Object.isObject;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(19);
+__webpack_require__(20);
 
 module.exports = Sugar.Object.isRegExp;
 
@@ -17796,7 +17796,7 @@ module.exports = Sugar.Object.isRegExp;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(19);
+__webpack_require__(20);
 
 module.exports = Sugar.Object.isSet;
 
@@ -17809,7 +17809,7 @@ module.exports = Sugar.Object.isSet;
 
 var Sugar = __webpack_require__(0);
 
-__webpack_require__(19);
+__webpack_require__(20);
 
 module.exports = Sugar.Object.isString;
 
@@ -17821,7 +17821,7 @@ module.exports = Sugar.Object.isString;
 
 
 var Sugar = __webpack_require__(0),
-    mergeWithOptions = __webpack_require__(104);
+    mergeWithOptions = __webpack_require__(105);
 
 Sugar.Object.defineInstanceAndStatic({
 
@@ -17841,7 +17841,7 @@ module.exports = Sugar.Object.merge;
 
 
 var Sugar = __webpack_require__(0),
-    mergeAll = __webpack_require__(105);
+    mergeAll = __webpack_require__(106);
 
 Sugar.Object.defineInstanceAndStatic({
 
@@ -17939,7 +17939,7 @@ module.exports = Sugar.Object.remove;
 "use strict";
 
 
-var getMatcher = __webpack_require__(25),
+var getMatcher = __webpack_require__(26),
     coreUtilityAliases = __webpack_require__(4);
 
 var forEachProperty = coreUtilityAliases.forEachProperty;
@@ -18018,7 +18018,7 @@ module.exports = Sugar.Object.set;
 "use strict";
 
 
-var handleDeepProperty = __webpack_require__(86);
+var handleDeepProperty = __webpack_require__(87);
 
 function deepSetProperty(obj, key, val) {
   handleDeepProperty(obj, key, false, false, true, false, val);
@@ -18564,7 +18564,7 @@ module.exports = LazyLoadedLocales;
 "use strict";
 
 
-var getEnglishVariant = __webpack_require__(106);
+var getEnglishVariant = __webpack_require__(107);
 
 var BritishEnglishDefinition = getEnglishVariant({
   'short':  '{dd}/{MM}/{yyyy}',
@@ -18656,7 +18656,7 @@ module.exports = EnglishLocaleBaseDefinition;
 "use strict";
 
 
-var getEnglishVariant = __webpack_require__(106);
+var getEnglishVariant = __webpack_require__(107);
 
 var CanadianEnglishDefinition = getEnglishVariant({
   'short':  '{yyyy}-{MM}-{dd}',
@@ -18676,24 +18676,24 @@ module.exports = CanadianEnglishDefinition;
 
 
 var LOCALE_ARRAY_FIELDS = __webpack_require__(525),
-    ISODefaults = __webpack_require__(107),
+    ISODefaults = __webpack_require__(108),
     CoreParsingTokens = __webpack_require__(526),
     CoreParsingFormats = __webpack_require__(527),
     LocalizedParsingTokens = __webpack_require__(168),
-    map = __webpack_require__(30),
-    filter = __webpack_require__(92),
+    map = __webpack_require__(31),
+    filter = __webpack_require__(93),
     forEach = __webpack_require__(7),
     isDefined = __webpack_require__(8),
     commaSplit = __webpack_require__(137),
     classChecks = __webpack_require__(2),
     mathAliases = __webpack_require__(5),
     isUndefined = __webpack_require__(6),
-    simpleMerge = __webpack_require__(71),
+    simpleMerge = __webpack_require__(72),
     getOrdinalSuffix = __webpack_require__(141),
     getArrayWithOffset = __webpack_require__(528),
     getRegNonCapturing = __webpack_require__(169),
     coreUtilityAliases = __webpack_require__(4),
-    iterateOverDateUnits = __webpack_require__(108),
+    iterateOverDateUnits = __webpack_require__(109),
     arrayToRegAlternates = __webpack_require__(530),
     fullwidthNumberHelpers = __webpack_require__(134),
     getAdjustedUnitForNumber = __webpack_require__(531),
@@ -19411,7 +19411,7 @@ module.exports = '_sugar_';
 "use strict";
 
 
-var map = __webpack_require__(30),
+var map = __webpack_require__(31),
     escapeRegExp = __webpack_require__(39);
 
 function arrayToRegAlternates(arr) {
@@ -19479,7 +19479,7 @@ module.exports = getParsingTokenWithSuffix;
 
 
 var Sugar = __webpack_require__(0),
-    createDate = __webpack_require__(27);
+    createDate = __webpack_require__(28);
 
 __webpack_require__(547);
 
@@ -19673,7 +19673,7 @@ module.exports = deleteDateParam;
 "use strict";
 
 
-var getYear = __webpack_require__(35),
+var getYear = __webpack_require__(36),
     mathAliases = __webpack_require__(5);
 
 var abs = mathAliases.abs;
@@ -19703,7 +19703,7 @@ module.exports = getYearFromAbbreviation;
 
 
 var DateUnitIndexes = __webpack_require__(9),
-    iterateOverDateParams = __webpack_require__(78);
+    iterateOverDateParams = __webpack_require__(79);
 
 var DAY_INDEX = DateUnitIndexes.DAY_INDEX,
     YEAR_INDEX = DateUnitIndexes.YEAR_INDEX;
@@ -19732,7 +19732,7 @@ setDateChainableConstructor();
 "use strict";
 
 
-var createDate = __webpack_require__(27),
+var createDate = __webpack_require__(28),
     namespaceAliases = __webpack_require__(13),
     setChainableConstructor = __webpack_require__(143);
 
@@ -19875,8 +19875,8 @@ module.exports = Sugar.Number.day;
 "use strict";
 
 
-var DateUnits = __webpack_require__(34),
-    createDate = __webpack_require__(27),
+var DateUnits = __webpack_require__(35),
+    createDate = __webpack_require__(28),
     mathAliases = __webpack_require__(5),
     advanceDate = __webpack_require__(63),
     namespaceAliases = __webpack_require__(13),
@@ -20981,18 +20981,18 @@ module.exports = Sugar.Date.addDays;
 "use strict";
 
 
-var DateUnits = __webpack_require__(34),
+var DateUnits = __webpack_require__(35),
     DateUnitIndexes = __webpack_require__(9),
     forEach = __webpack_require__(7),
-    createDate = __webpack_require__(27),
+    createDate = __webpack_require__(28),
     compareDate = __webpack_require__(179),
     advanceDate = __webpack_require__(63),
-    moveToEndOfUnit = __webpack_require__(79),
+    moveToEndOfUnit = __webpack_require__(80),
     namespaceAliases = __webpack_require__(13),
-    simpleCapitalize = __webpack_require__(68),
-    moveToBeginningOfUnit = __webpack_require__(80),
+    simpleCapitalize = __webpack_require__(69),
+    moveToBeginningOfUnit = __webpack_require__(81),
     defineInstanceSimilar = __webpack_require__(56),
-    getTimeDistanceForUnit = __webpack_require__(112);
+    getTimeDistanceForUnit = __webpack_require__(113);
 
 var sugarDate = namespaceAliases.sugarDate,
     HOURS_INDEX = DateUnitIndexes.HOURS_INDEX,
@@ -21221,8 +21221,8 @@ module.exports = Sugar.Date.beginningOfDay;
 
 var Sugar = __webpack_require__(0),
     resetTime = __webpack_require__(173),
-    getWeekday = __webpack_require__(23),
-    setWeekday = __webpack_require__(28);
+    getWeekday = __webpack_require__(24),
+    setWeekday = __webpack_require__(29);
 
 Sugar.Date.defineInstance({
 
@@ -21394,9 +21394,9 @@ module.exports = Sugar.Date.endOfDay;
 
 var Sugar = __webpack_require__(0),
     DateUnitIndexes = __webpack_require__(9),
-    getWeekday = __webpack_require__(23),
-    setWeekday = __webpack_require__(28),
-    moveToEndOfUnit = __webpack_require__(79);
+    getWeekday = __webpack_require__(24),
+    setWeekday = __webpack_require__(29),
+    moveToEndOfUnit = __webpack_require__(80);
 
 var DAY_INDEX = DateUnitIndexes.DAY_INDEX;
 
@@ -21651,18 +21651,18 @@ var TIMEZONE_ABBREVIATION_REG = __webpack_require__(667),
     DateUnitIndexes = __webpack_require__(9),
     trunc = __webpack_require__(15),
     getDate = __webpack_require__(51),
-    getYear = __webpack_require__(35),
+    getYear = __webpack_require__(36),
     getHours = __webpack_require__(184),
-    getMonth = __webpack_require__(36),
+    getMonth = __webpack_require__(37),
     cloneDate = __webpack_require__(52),
     padNumber = __webpack_require__(57),
-    getWeekday = __webpack_require__(23),
-    callDateGet = __webpack_require__(20),
+    getWeekday = __webpack_require__(24),
+    callDateGet = __webpack_require__(21),
     mathAliases = __webpack_require__(5),
     getWeekYear = __webpack_require__(668),
     getUTCOffset = __webpack_require__(185),
     getDaysSince = __webpack_require__(669),
-    getWeekNumber = __webpack_require__(113),
+    getWeekNumber = __webpack_require__(114),
     getMeridiemToken = __webpack_require__(670),
     setUnitAndLowerToEdge = __webpack_require__(48);
 
@@ -21990,9 +21990,9 @@ module.exports = /\(([-+]\d{2,4}|\w{3,5})\)$/;
 
 
 var LocaleHelpers = __webpack_require__(10),
-    getYear = __webpack_require__(35),
-    getMonth = __webpack_require__(36),
-    getWeekNumber = __webpack_require__(113);
+    getYear = __webpack_require__(36),
+    getMonth = __webpack_require__(37),
+    getWeekNumber = __webpack_require__(114);
 
 var localeManager = LocaleHelpers.localeManager;
 
@@ -22025,9 +22025,9 @@ module.exports = getWeekYear;
 "use strict";
 
 
-var DateUnits = __webpack_require__(34),
+var DateUnits = __webpack_require__(35),
     DateUnitIndexes = __webpack_require__(9),
-    getTimeDistanceForUnit = __webpack_require__(112);
+    getTimeDistanceForUnit = __webpack_require__(113);
 
 var DAY_INDEX = DateUnitIndexes.DAY_INDEX;
 
@@ -22084,7 +22084,7 @@ module.exports = Sugar.Date.get;
 "use strict";
 
 
-var getExtendedDate = __webpack_require__(109);
+var getExtendedDate = __webpack_require__(110);
 
 function createDateWithContext(contextDate, d, options, forceClone) {
   return getExtendedDate(contextDate, d, options, forceClone).date;
@@ -22100,7 +22100,7 @@ module.exports = createDateWithContext;
 
 
 var Sugar = __webpack_require__(0),
-    getWeekNumber = __webpack_require__(113);
+    getWeekNumber = __webpack_require__(114);
 
 Sugar.Date.defineInstance({
 
@@ -22159,7 +22159,7 @@ module.exports = Sugar.Date.getUTCWeekday;
 
 
 var Sugar = __webpack_require__(0),
-    getWeekday = __webpack_require__(23);
+    getWeekday = __webpack_require__(24);
 
 Sugar.Date.defineInstance({
 
@@ -22252,8 +22252,8 @@ module.exports = Sugar.Date.is;
 
 var setDate = __webpack_require__(50),
     getDate = __webpack_require__(51),
-    getYear = __webpack_require__(35),
-    getMonth = __webpack_require__(36),
+    getYear = __webpack_require__(36),
+    getMonth = __webpack_require__(37),
     getNewDate = __webpack_require__(62);
 
 function compareDay(d, shift) {
@@ -22276,7 +22276,7 @@ module.exports = compareDay;
 
 
 var Sugar = __webpack_require__(0),
-    createDate = __webpack_require__(27);
+    createDate = __webpack_require__(28);
 
 Sugar.Date.defineInstance({
 
@@ -22296,7 +22296,7 @@ module.exports = Sugar.Date.isAfter;
 
 
 var Sugar = __webpack_require__(0),
-    createDate = __webpack_require__(27);
+    createDate = __webpack_require__(28);
 
 Sugar.Date.defineInstance({
 
@@ -22316,7 +22316,7 @@ module.exports = Sugar.Date.isBefore;
 
 
 var Sugar = __webpack_require__(0),
-    createDate = __webpack_require__(27),
+    createDate = __webpack_require__(28),
     mathAliases = __webpack_require__(5);
 
 var min = mathAliases.min,
@@ -22441,7 +22441,7 @@ module.exports = Sugar.Date.isLastYear;
 
 
 var Sugar = __webpack_require__(0),
-    getYear = __webpack_require__(35);
+    getYear = __webpack_require__(36);
 
 Sugar.Date.defineInstance({
 
@@ -22663,8 +22663,8 @@ module.exports = Sugar.Date.isUTC;
 "use strict";
 
 
-var _utc = __webpack_require__(26),
-    tzOffset = __webpack_require__(76);
+var _utc = __webpack_require__(27),
+    tzOffset = __webpack_require__(77);
 
 function isUTC(d) {
   return !!_utc(d) || tzOffset(d) === 0;
@@ -22949,7 +22949,7 @@ module.exports = Sugar.Date.relative;
 var getNewDate = __webpack_require__(62),
     mathAliases = __webpack_require__(5),
     getAdjustedUnit = __webpack_require__(171),
-    getTimeDistanceForUnit = __webpack_require__(112);
+    getTimeDistanceForUnit = __webpack_require__(113);
 
 var abs = mathAliases.abs;
 
@@ -22984,7 +22984,7 @@ module.exports = getAdjustedUnitForDate;
 
 
 var Sugar = __webpack_require__(0),
-    createDate = __webpack_require__(27),
+    createDate = __webpack_require__(28),
     dateRelative = __webpack_require__(188);
 
 Sugar.Date.defineInstance({
@@ -23006,7 +23006,7 @@ module.exports = Sugar.Date.relativeTo;
 
 var Sugar = __webpack_require__(0),
     DateUnitIndexes = __webpack_require__(9),
-    moveToBeginningOfUnit = __webpack_require__(80),
+    moveToBeginningOfUnit = __webpack_require__(81),
     getUnitIndexForParamName = __webpack_require__(731);
 
 var DAY_INDEX = DateUnitIndexes.DAY_INDEX;
@@ -23030,7 +23030,7 @@ module.exports = Sugar.Date.reset;
 "use strict";
 
 
-var iterateOverDateParams = __webpack_require__(78);
+var iterateOverDateParams = __webpack_require__(79);
 
 function getUnitIndexForParamName(name) {
   var params = {}, unitIndex;
@@ -23124,7 +23124,7 @@ module.exports = Sugar.Date.secondsUntil;
 
 
 var Sugar = __webpack_require__(0),
-    updateDate = __webpack_require__(77),
+    updateDate = __webpack_require__(78),
     collectUpdateDateArguments = __webpack_require__(181);
 
 Sugar.Date.defineInstanceWithArguments({
@@ -23166,7 +23166,7 @@ module.exports = Sugar.Date.setISOWeek;
 
 
 var Sugar = __webpack_require__(0),
-    _utc = __webpack_require__(26);
+    _utc = __webpack_require__(27);
 
 Sugar.Date.defineInstance({
 
@@ -23186,7 +23186,7 @@ module.exports = Sugar.Date.setUTC;
 
 
 var Sugar = __webpack_require__(0),
-    setWeekday = __webpack_require__(28);
+    setWeekday = __webpack_require__(29);
 
 Sugar.Date.defineInstance({
 
@@ -23310,7 +23310,7 @@ module.exports = Sugar.Date.yearsUntil;
 
 
 var Sugar = __webpack_require__(0),
-    _dateOptions = __webpack_require__(110);
+    _dateOptions = __webpack_require__(111);
 
 module.exports = Sugar.Date.getOption;
 
@@ -23322,7 +23322,7 @@ module.exports = Sugar.Date.getOption;
 
 
 var Sugar = __webpack_require__(0),
-    _dateOptions = __webpack_require__(110);
+    _dateOptions = __webpack_require__(111);
 
 module.exports = Sugar.Date.setOption;
 
@@ -23477,7 +23477,7 @@ module.exports = {
 "use strict";
 
 
-var DURATION_UNITS = __webpack_require__(114);
+var DURATION_UNITS = __webpack_require__(115);
 
 module.exports = '((?:\\d+)?\\s*(?:' + DURATION_UNITS + '))s?';
 
@@ -23488,7 +23488,7 @@ module.exports = '((?:\\d+)?\\s*(?:' + DURATION_UNITS + '))s?';
 "use strict";
 
 
-var DURATION_UNITS = __webpack_require__(114);
+var DURATION_UNITS = __webpack_require__(115);
 
 module.exports = RegExp('(\\d+)?\\s*('+ DURATION_UNITS +')s?', 'i');
 
@@ -23537,7 +23537,7 @@ module.exports = Sugar.String.range;
 
 var Sugar = __webpack_require__(0),
     Range = __webpack_require__(11),
-    rangeClamp = __webpack_require__(115);
+    rangeClamp = __webpack_require__(116);
 
 Sugar.Number.defineInstance({
 
@@ -23558,7 +23558,7 @@ module.exports = Sugar.Number.cap;
 
 var Sugar = __webpack_require__(0),
     Range = __webpack_require__(11),
-    rangeClamp = __webpack_require__(115);
+    rangeClamp = __webpack_require__(116);
 
 Sugar.Number.defineInstance({
 
@@ -23655,7 +23655,7 @@ module.exports = getGreaterPrecision;
 "use strict";
 
 
-var periodSplit = __webpack_require__(87);
+var periodSplit = __webpack_require__(88);
 
 function getPrecision(n) {
   var split = periodSplit(n.toString());
@@ -23672,7 +23672,7 @@ module.exports = getPrecision;
 
 
 var Range = __webpack_require__(11),
-    rangeClamp = __webpack_require__(115),
+    rangeClamp = __webpack_require__(116),
     defineOnPrototype = __webpack_require__(17);
 
 defineOnPrototype(Range, {
@@ -23741,7 +23741,7 @@ defineOnPrototype(Range, {
 "use strict";
 
 
-__webpack_require__(29);
+__webpack_require__(30);
 
 // This package does not export anything as it is
 // simply defining "days" on Range.prototype.
@@ -23754,12 +23754,12 @@ __webpack_require__(29);
 
 
 var MULTIPLIERS = __webpack_require__(193),
-    DURATION_UNITS = __webpack_require__(114),
+    DURATION_UNITS = __webpack_require__(115),
     Range = __webpack_require__(11),
     trunc = __webpack_require__(15),
     forEach = __webpack_require__(7),
-    rangeEvery = __webpack_require__(81),
-    simpleCapitalize = __webpack_require__(68),
+    rangeEvery = __webpack_require__(82),
+    simpleCapitalize = __webpack_require__(69),
     defineOnPrototype = __webpack_require__(17);
 
 function buildDateRangeUnits() {
@@ -23791,7 +23791,7 @@ module.exports = buildDateRangeUnits;
 
 
 var Range = __webpack_require__(11),
-    rangeEvery = __webpack_require__(81),
+    rangeEvery = __webpack_require__(82),
     defineOnPrototype = __webpack_require__(17);
 
 defineOnPrototype(Range, {
@@ -23812,7 +23812,7 @@ defineOnPrototype(Range, {
 "use strict";
 
 
-__webpack_require__(29);
+__webpack_require__(30);
 
 // This package does not export anything as it is
 // simply defining "hours" on Range.prototype.
@@ -23852,7 +23852,7 @@ defineOnPrototype(Range, {
 
 
 var Range = __webpack_require__(11),
-    rangeIsValid = __webpack_require__(82),
+    rangeIsValid = __webpack_require__(83),
     defineOnPrototype = __webpack_require__(17);
 
 defineOnPrototype(Range, {
@@ -23873,7 +23873,7 @@ defineOnPrototype(Range, {
 "use strict";
 
 
-__webpack_require__(29);
+__webpack_require__(30);
 
 // This package does not export anything as it is
 // simply defining "milliseconds" on Range.prototype.
@@ -23885,7 +23885,7 @@ __webpack_require__(29);
 "use strict";
 
 
-__webpack_require__(29);
+__webpack_require__(30);
 
 // This package does not export anything as it is
 // simply defining "minutes" on Range.prototype.
@@ -23897,7 +23897,7 @@ __webpack_require__(29);
 "use strict";
 
 
-__webpack_require__(29);
+__webpack_require__(30);
 
 // This package does not export anything as it is
 // simply defining "months" on Range.prototype.
@@ -23909,7 +23909,7 @@ __webpack_require__(29);
 "use strict";
 
 
-__webpack_require__(29);
+__webpack_require__(30);
 
 // This package does not export anything as it is
 // simply defining "seconds" on Range.prototype.
@@ -23923,7 +23923,7 @@ __webpack_require__(29);
 
 var Range = __webpack_require__(11),
     mathAliases = __webpack_require__(5),
-    rangeIsValid = __webpack_require__(82),
+    rangeIsValid = __webpack_require__(83),
     defineOnPrototype = __webpack_require__(17),
     getRangeMemberNumericValue = __webpack_require__(782);
 
@@ -23966,7 +23966,7 @@ module.exports = getRangeMemberNumericValue;
 
 
 var Range = __webpack_require__(11),
-    rangeEvery = __webpack_require__(81),
+    rangeEvery = __webpack_require__(82),
     defineOnPrototype = __webpack_require__(17);
 
 defineOnPrototype(Range, {
@@ -23988,7 +23988,7 @@ defineOnPrototype(Range, {
 
 
 var Range = __webpack_require__(11),
-    rangeIsValid = __webpack_require__(82),
+    rangeIsValid = __webpack_require__(83),
     defineOnPrototype = __webpack_require__(17);
 
 defineOnPrototype(Range, {
@@ -24033,7 +24033,7 @@ defineOnPrototype(Range, {
 "use strict";
 
 
-__webpack_require__(29);
+__webpack_require__(30);
 
 // This package does not export anything as it is
 // simply defining "weeks" on Range.prototype.
@@ -24045,7 +24045,7 @@ __webpack_require__(29);
 "use strict";
 
 
-__webpack_require__(29);
+__webpack_require__(30);
 
 // This package does not export anything as it is
 // simply defining "years" on Range.prototype.
@@ -24144,7 +24144,7 @@ module.exports = Sugar.Function.cancel;
 
 
 var Sugar = __webpack_require__(0),
-    setDelay = __webpack_require__(83),
+    setDelay = __webpack_require__(84),
     cancelFunction = __webpack_require__(197);
 
 Sugar.Function.defineInstance({
@@ -24171,7 +24171,7 @@ module.exports = Sugar.Function.debounce;
 
 
 var Sugar = __webpack_require__(0),
-    setDelay = __webpack_require__(83);
+    setDelay = __webpack_require__(84);
 
 Sugar.Function.defineInstanceWithArguments({
 
@@ -24192,7 +24192,7 @@ module.exports = Sugar.Function.delay;
 
 
 var Sugar = __webpack_require__(0),
-    setDelay = __webpack_require__(83);
+    setDelay = __webpack_require__(84);
 
 Sugar.Function.defineInstanceWithArguments({
 
@@ -24276,7 +24276,7 @@ module.exports = Sugar.Function.lock;
 
 var Sugar = __webpack_require__(0),
     classChecks = __webpack_require__(2),
-    deepGetProperty = __webpack_require__(69),
+    deepGetProperty = __webpack_require__(70),
     collectArguments = __webpack_require__(798),
     createHashedMemoizeFunction = __webpack_require__(799);
 
@@ -24332,7 +24332,7 @@ module.exports = collectArguments;
 "use strict";
 
 
-var serializeInternal = __webpack_require__(73),
+var serializeInternal = __webpack_require__(74),
     coreUtilityAliases = __webpack_require__(4);
 
 var hasOwn = coreUtilityAliases.hasOwn,
@@ -24700,7 +24700,7 @@ module.exports = __webpack_require__(815);
 var utils = __webpack_require__(16);
 var bind = __webpack_require__(203);
 var Axios = __webpack_require__(817);
-var defaults = __webpack_require__(116);
+var defaults = __webpack_require__(117);
 
 /**
  * Create an instance of Axios
@@ -24783,7 +24783,7 @@ function isSlowBuffer (obj) {
 "use strict";
 
 
-var defaults = __webpack_require__(116);
+var defaults = __webpack_require__(117);
 var utils = __webpack_require__(16);
 var InterceptorManager = __webpack_require__(826);
 var dispatchRequest = __webpack_require__(827);
@@ -25322,7 +25322,7 @@ module.exports = InterceptorManager;
 var utils = __webpack_require__(16);
 var transformData = __webpack_require__(828);
 var isCancel = __webpack_require__(207);
-var defaults = __webpack_require__(116);
+var defaults = __webpack_require__(117);
 var isAbsoluteURL = __webpack_require__(829);
 var combineURLs = __webpack_require__(830);
 
@@ -36937,7 +36937,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(37)
+var normalizeComponent = __webpack_require__(18)
 /* script */
 var __vue_script__ = __webpack_require__(837)
 /* template */
@@ -37122,7 +37122,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(37)
+var normalizeComponent = __webpack_require__(18)
 /* script */
 var __vue_script__ = __webpack_require__(840)
 /* template */
@@ -37474,11 +37474,266 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(37)
+var normalizeComponent = __webpack_require__(18)
 /* script */
 var __vue_script__ = __webpack_require__(843)
 /* template */
 var __vue_template__ = __webpack_require__(844)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/Players.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0c847bd2", Component.options)
+  } else {
+    hotAPI.reload("data-v-0c847bd2", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 843 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['team_id', 'is_admin'],
+  data: function data() {
+    return {
+      users: [],
+      search: '',
+      isAdmin: !!this.is_admin
+    };
+  },
+
+  methods: {
+    ff: function ff() {
+      var _this = this;
+
+      return this.users.filter(function (u) {
+        var findby = u.player.fname + '"' + u.player.nname + '"' + u.player.lname;
+        return findby.toLowerCase().indexOf(_this.search.toLowerCase()) >= 0;
+      });
+    },
+    dd: function dd(user_id) {
+      var _this2 = this;
+
+      axios.post('/dashboard/player/delete', { team_id: this.team_id, user_id: user_id }).then(function (res) {
+        _this2.users.remove(function (u) {
+          return u.id === user_id;
+        });
+      });
+    },
+    makemod: function makemod(user_id) {
+      var user = this.users.find(function (u) {
+        return u.id === user_id;
+      });
+      // user.pivot.isMod = !user.pivot.isMod
+      axios.post('/dashboard/team/makemod', { team_id: this.team_id, user_id: user_id }).then(function (res) {
+        user.pivot.isMod = !!res.data;
+      });
+    }
+  },
+  mounted: function mounted() {
+    var _this3 = this;
+
+    this.$root.$on('searching', function (data) {
+      _this3.search = data;
+    });
+    axios.get('/dashboard/team/players/fetch/' + this.team_id).then(function (res) {
+      _this3.users = res.data.users;
+      window.loaded();
+    });
+  }
+});
+
+/***/ }),
+/* 844 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {},
+    [
+      _vm._l(_vm.ff(), function(user) {
+        return _c("div", { staticClass: "box" }, [
+          _c(
+            "article",
+            { staticClass: "media", staticStyle: { "align-items": "center" } },
+            [
+              _c("figure", { staticClass: "media-left" }, [
+                _c("p", { staticClass: "image is-64x64" }, [
+                  _c("img", { attrs: { src: user.player.avatar } })
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "media-content" }, [
+                _c("div", { staticClass: "content" }, [
+                  _c("div", { staticClass: "is-size-5" }, [
+                    _vm._v(
+                      _vm._s(
+                        user.player.fname +
+                          ' "' +
+                          user.player.nname +
+                          '" ' +
+                          user.player.lname
+                      )
+                    )
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "media-right" }, [
+                _c("div", { staticClass: "level-left" }, [
+                  _c("div", { staticClass: "level-item" }, [
+                    _c(
+                      "a",
+                      {
+                        class: [
+                          "circle",
+                          "is-size-6",
+                          "has-text-white",
+                          {
+                            "has-background-grey-light": !user.pivot.isMod,
+                            "has-background-warning": user.pivot.isMod
+                          }
+                        ],
+                        staticStyle: { width: "30px" },
+                        attrs: { href: "#promote" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            _vm.makemod(user.id)
+                          }
+                        }
+                      },
+                      [_vm._m(0, true)]
+                    )
+                  ])
+                ])
+              ])
+            ]
+          )
+        ])
+      }),
+      _vm._v(" "),
+      _vm.ff().length <= 0
+        ? _c(
+            "div",
+            { staticClass: "has-text-centered is-size-4 has-background-light" },
+            [_vm._v("\n    Could not find anything.\n  ")]
+          )
+        : _vm._e()
+    ],
+    2
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "content", staticStyle: { padding: "0.2rem" } },
+      [_c("i", { staticClass: "fas fa-star", staticStyle: { "z-index": "1" } })]
+    )
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-0c847bd2", module.exports)
+  }
+}
+
+/***/ }),
+/* 845 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(18)
+/* script */
+var __vue_script__ = __webpack_require__(846)
+/* template */
+var __vue_template__ = __webpack_require__(847)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -37517,7 +37772,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 843 */
+/* 846 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -37646,7 +37901,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 844 */
+/* 847 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -37733,19 +37988,19 @@ if (false) {
 }
 
 /***/ }),
-/* 845 */
+/* 848 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(846)
+  __webpack_require__(849)
 }
-var normalizeComponent = __webpack_require__(37)
+var normalizeComponent = __webpack_require__(18)
 /* script */
-var __vue_script__ = __webpack_require__(849)
+var __vue_script__ = __webpack_require__(852)
 /* template */
-var __vue_template__ = __webpack_require__(860)
+var __vue_template__ = __webpack_require__(863)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -37784,17 +38039,17 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 846 */
+/* 849 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(847);
+var content = __webpack_require__(850);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(117)("3eec65f5", content, false, {});
+var update = __webpack_require__(85)("3eec65f5", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -37810,10 +38065,10 @@ if(false) {
 }
 
 /***/ }),
-/* 847 */
+/* 850 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(84)(false);
+exports = module.exports = __webpack_require__(65)(false);
 // imports
 
 
@@ -37824,7 +38079,7 @@ exports.push([module.i, "\n.avatar-upload {\n  display: -webkit-box;\n  display:
 
 
 /***/ }),
-/* 848 */
+/* 851 */
 /***/ (function(module, exports) {
 
 /**
@@ -37857,12 +38112,12 @@ module.exports = function listToStyles (parentId, list) {
 
 
 /***/ }),
-/* 849 */
+/* 852 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ImageUploader__ = __webpack_require__(850);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ImageUploader__ = __webpack_require__(853);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__ImageUploader___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__ImageUploader__);
 //
 //
@@ -37931,19 +38186,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 850 */
+/* 853 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(851)
+  __webpack_require__(854)
 }
-var normalizeComponent = __webpack_require__(37)
+var normalizeComponent = __webpack_require__(18)
 /* script */
-var __vue_script__ = __webpack_require__(853)
+var __vue_script__ = __webpack_require__(856)
 /* template */
-var __vue_template__ = __webpack_require__(859)
+var __vue_template__ = __webpack_require__(862)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -37982,17 +38237,17 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 851 */
+/* 854 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(852);
+var content = __webpack_require__(855);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(117)("9c7197d8", content, false, {});
+var update = __webpack_require__(85)("9c7197d8", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -38008,10 +38263,10 @@ if(false) {
 }
 
 /***/ }),
-/* 852 */
+/* 855 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(84)(false);
+exports = module.exports = __webpack_require__(65)(false);
 // imports
 
 
@@ -38022,14 +38277,14 @@ exports.push([module.i, "\n.img {\n  max-width: 100%;\n}\n.nav-button {\n  -webk
 
 
 /***/ }),
-/* 853 */
+/* 856 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_cropperjs_dist_cropper_css__ = __webpack_require__(854);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_cropperjs_dist_cropper_css__ = __webpack_require__(857);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_cropperjs_dist_cropper_css___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_cropperjs_dist_cropper_css__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_cropperjs__ = __webpack_require__(858);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_cropperjs__ = __webpack_require__(861);
 //
 //
 //
@@ -38198,13 +38453,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 854 */
+/* 857 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(855);
+var content = __webpack_require__(858);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -38212,7 +38467,7 @@ var transform;
 var options = {}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(856)(content, options);
+var update = __webpack_require__(859)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -38229,10 +38484,10 @@ if(false) {
 }
 
 /***/ }),
-/* 855 */
+/* 858 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(84)(false);
+exports = module.exports = __webpack_require__(65)(false);
 // imports
 
 
@@ -38243,7 +38498,7 @@ exports.push([module.i, "/*!\n * Cropper.js v1.4.3\n * https://fengyuanchen.gith
 
 
 /***/ }),
-/* 856 */
+/* 859 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -38289,7 +38544,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(857);
+var	fixUrls = __webpack_require__(860);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -38602,7 +38857,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 857 */
+/* 860 */
 /***/ (function(module, exports) {
 
 
@@ -38697,7 +38952,7 @@ module.exports = function (css) {
 
 
 /***/ }),
-/* 858 */
+/* 861 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -42217,7 +42472,7 @@ assign(Cropper.prototype, render, preview, events, handlers, change, methods);
 
 
 /***/ }),
-/* 859 */
+/* 862 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -42408,7 +42663,7 @@ if (false) {
 }
 
 /***/ }),
-/* 860 */
+/* 863 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -42470,15 +42725,15 @@ if (false) {
 }
 
 /***/ }),
-/* 861 */
+/* 864 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(37)
+var normalizeComponent = __webpack_require__(18)
 /* script */
-var __vue_script__ = __webpack_require__(862)
+var __vue_script__ = __webpack_require__(865)
 /* template */
-var __vue_template__ = __webpack_require__(863)
+var __vue_template__ = __webpack_require__(866)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -42517,7 +42772,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 862 */
+/* 865 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -42601,7 +42856,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 863 */
+/* 866 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -42654,19 +42909,19 @@ if (false) {
 }
 
 /***/ }),
-/* 864 */
+/* 867 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(865)
+  __webpack_require__(868)
 }
-var normalizeComponent = __webpack_require__(37)
+var normalizeComponent = __webpack_require__(18)
 /* script */
-var __vue_script__ = __webpack_require__(867)
+var __vue_script__ = __webpack_require__(870)
 /* template */
-var __vue_template__ = __webpack_require__(868)
+var __vue_template__ = __webpack_require__(871)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -42705,17 +42960,17 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 865 */
+/* 868 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(866);
+var content = __webpack_require__(869);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(117)("09a743c9", content, false, {});
+var update = __webpack_require__(85)("09a743c9", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -42731,10 +42986,10 @@ if(false) {
 }
 
 /***/ }),
-/* 866 */
+/* 869 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(84)(false);
+exports = module.exports = __webpack_require__(65)(false);
 // imports
 
 
@@ -42745,7 +43000,7 @@ exports.push([module.i, "\n.tag-input {\n  height: 100%;\n  margin-left: 0.5rem;
 
 
 /***/ }),
-/* 867 */
+/* 870 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -42861,7 +43116,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 868 */
+/* 871 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -42967,469 +43222,15 @@ if (false) {
 }
 
 /***/ }),
-/* 869 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 870 */,
-/* 871 */,
-/* 872 */,
-/* 873 */,
-/* 874 */
+/* 872 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(875)
-}
-var normalizeComponent = __webpack_require__(37)
+var normalizeComponent = __webpack_require__(18)
 /* script */
-var __vue_script__ = __webpack_require__(877)
+var __vue_script__ = __webpack_require__(873)
 /* template */
-var __vue_template__ = __webpack_require__(878)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/components/YouTubeVideos.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-5264a2c0", Component.options)
-  } else {
-    hotAPI.reload("data-v-5264a2c0", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 875 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(876);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(117)("0e96647d", content, false, {});
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-5264a2c0\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./YouTubeVideos.vue", function() {
-     var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-5264a2c0\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./YouTubeVideos.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 876 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(84)(false);
-// imports
-
-
-// module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 877 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['player_id'],
-  data: function data() {
-    return {
-      loading: true,
-      count: 0,
-      entries: []
-    };
-  },
-
-  methods: {
-    count_check: function count_check() {
-      this.count++;
-      if (this.count == this.entries.length) this.done_loading();
-    },
-    done_loading: function done_loading() {
-      this.loading = false;
-    }
-  },
-  mounted: function mounted() {
-    var _this = this;
-
-    axios.get('/p/youtube/' + this.player_id).then(function (res) {
-      _this.entries = res.data.entry;
-    }).catch(function (err) {
-      console.error(err);
-    });
-  }
-});
-
-/***/ }),
-/* 878 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {},
-    _vm._l(_vm.entries, function(entry) {
-      return _c(
-        "div",
-        {
-          staticClass: "has-background-light",
-          staticStyle: {
-            height: "117px",
-            width: "208px",
-            display: "inline-block",
-            margin: "0.2rem 0.2rem 0 0"
-          }
-        },
-        [
-          _c("iframe", {
-            class: { "is-hidden": _vm.loading },
-            attrs: {
-              width: "208",
-              height: "117",
-              src: "https://www.youtube.com/embed/" + entry.id,
-              frameborder: "0",
-              allow:
-                "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture",
-              allowfullscreen: ""
-            },
-            on: { load: _vm.count_check }
-          })
-        ]
-      )
-    }),
-    0
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-5264a2c0", module.exports)
-  }
-}
-
-/***/ }),
-/* 879 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(37)
-/* script */
-var __vue_script__ = __webpack_require__(880)
-/* template */
-var __vue_template__ = __webpack_require__(881)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = null
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources/js/components/Players.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-0c847bd2", Component.options)
-  } else {
-    hotAPI.reload("data-v-0c847bd2", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 880 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['team_id', 'is_admin'],
-  data: function data() {
-    return {
-      users: [],
-      search: '',
-      isAdmin: !!this.is_admin
-    };
-  },
-
-  methods: {
-    ff: function ff() {
-      var _this = this;
-
-      return this.users.filter(function (u) {
-        var findby = u.player.fname + '"' + u.player.nname + '"' + u.player.lname;
-        return findby.toLowerCase().indexOf(_this.search.toLowerCase()) >= 0;
-      });
-    },
-    dd: function dd(user_id) {
-      var _this2 = this;
-
-      axios.post('/dashboard/player/delete', { team_id: this.team_id, user_id: user_id }).then(function (res) {
-        _this2.users.remove(function (u) {
-          return u.id === user_id;
-        });
-      });
-    },
-    makemod: function makemod(user_id) {
-      var user = this.users.find(function (u) {
-        return u.id === user_id;
-      });
-      // user.pivot.isMod = !user.pivot.isMod
-      axios.post('/dashboard/team/makemod', { team_id: this.team_id, user_id: user_id }).then(function (res) {
-        user.pivot.isMod = !!res.data;
-      });
-    }
-  },
-  mounted: function mounted() {
-    var _this3 = this;
-
-    this.$root.$on('searching', function (data) {
-      _this3.search = data;
-    });
-    axios.get('/dashboard/team/players/fetch/' + this.team_id).then(function (res) {
-      _this3.users = res.data.users;
-      window.loaded();
-    });
-  }
-});
-
-/***/ }),
-/* 881 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {},
-    [
-      _vm._l(_vm.ff(), function(user) {
-        return _c("div", { staticClass: "box" }, [
-          _c(
-            "article",
-            { staticClass: "media", staticStyle: { "align-items": "center" } },
-            [
-              _c("figure", { staticClass: "media-left" }, [
-                _c("p", { staticClass: "image is-64x64" }, [
-                  _c("img", { attrs: { src: user.player.avatar } })
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "media-content" }, [
-                _c("div", { staticClass: "content" }, [
-                  _c("div", { staticClass: "is-size-5" }, [
-                    _vm._v(
-                      _vm._s(
-                        user.player.fname +
-                          ' "' +
-                          user.player.nname +
-                          '" ' +
-                          user.player.lname
-                      )
-                    )
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "media-right" }, [
-                _c("div", { staticClass: "level-left" }, [
-                  _c("div", { staticClass: "level-item" }, [
-                    _c(
-                      "a",
-                      {
-                        class: [
-                          "circle",
-                          "is-size-6",
-                          "has-text-white",
-                          {
-                            "has-background-grey-light": !user.pivot.isMod,
-                            "has-background-warning": user.pivot.isMod
-                          }
-                        ],
-                        staticStyle: { width: "30px" },
-                        attrs: { href: "#promote" },
-                        on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            _vm.makemod(user.id)
-                          }
-                        }
-                      },
-                      [_vm._m(0, true)]
-                    )
-                  ])
-                ])
-              ])
-            ]
-          )
-        ])
-      }),
-      _vm._v(" "),
-      _vm.ff().length <= 0
-        ? _c(
-            "div",
-            { staticClass: "has-text-centered is-size-4 has-background-light" },
-            [_vm._v("\n    Could not find anything.\n  ")]
-          )
-        : _vm._e()
-    ],
-    2
-  )
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "content", staticStyle: { padding: "0.2rem" } },
-      [_c("i", { staticClass: "fas fa-star", staticStyle: { "z-index": "1" } })]
-    )
-  }
-]
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-0c847bd2", module.exports)
-  }
-}
-
-/***/ }),
-/* 882 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-var normalizeComponent = __webpack_require__(37)
-/* script */
-var __vue_script__ = __webpack_require__(883)
-/* template */
-var __vue_template__ = __webpack_require__(884)
+var __vue_template__ = __webpack_require__(874)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -43468,7 +43269,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 883 */
+/* 873 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -43554,7 +43355,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 884 */
+/* 874 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -43638,15 +43439,15 @@ if (false) {
 }
 
 /***/ }),
-/* 885 */
+/* 875 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(37)
+var normalizeComponent = __webpack_require__(18)
 /* script */
-var __vue_script__ = __webpack_require__(886)
+var __vue_script__ = __webpack_require__(876)
 /* template */
-var __vue_template__ = __webpack_require__(887)
+var __vue_template__ = __webpack_require__(877)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -43685,7 +43486,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 886 */
+/* 876 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -43770,7 +43571,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 887 */
+/* 877 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -43852,6 +43653,201 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-916b9cf8", module.exports)
   }
 }
+
+/***/ }),
+/* 878 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(879)
+}
+var normalizeComponent = __webpack_require__(18)
+/* script */
+var __vue_script__ = __webpack_require__(881)
+/* template */
+var __vue_template__ = __webpack_require__(882)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/YouTubeVideos.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-5264a2c0", Component.options)
+  } else {
+    hotAPI.reload("data-v-5264a2c0", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 879 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(880);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(85)("0e96647d", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-5264a2c0\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./YouTubeVideos.vue", function() {
+     var newContent = require("!!../../../node_modules/css-loader/index.js!../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-5264a2c0\",\"scoped\":false,\"hasInlineConfig\":true}!../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./YouTubeVideos.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 880 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(65)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 881 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['player_id'],
+  data: function data() {
+    return {
+      loading: true,
+      count: 0,
+      entries: []
+    };
+  },
+
+  methods: {
+    count_check: function count_check() {
+      this.count++;
+      if (this.count == this.entries.length) this.done_loading();
+    },
+    done_loading: function done_loading() {
+      this.loading = false;
+    }
+  },
+  mounted: function mounted() {
+    var _this = this;
+
+    axios.get('/p/youtube/' + this.player_id).then(function (res) {
+      _this.entries = res.data.entry;
+    }).catch(function (err) {
+      console.error(err);
+    });
+  }
+});
+
+/***/ }),
+/* 882 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {},
+    _vm._l(_vm.entries, function(entry) {
+      return _c(
+        "div",
+        {
+          staticClass: "has-background-light",
+          staticStyle: {
+            height: "117px",
+            width: "208px",
+            display: "inline-block",
+            margin: "0.2rem 0.2rem 0 0"
+          }
+        },
+        [
+          _c("iframe", {
+            class: { "is-hidden": _vm.loading },
+            attrs: {
+              width: "208",
+              height: "117",
+              src: "https://www.youtube.com/embed/" + entry.id,
+              frameborder: "0",
+              allow:
+                "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture",
+              allowfullscreen: ""
+            },
+            on: { load: _vm.count_check }
+          })
+        ]
+      )
+    }),
+    0
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5264a2c0", module.exports)
+  }
+}
+
+/***/ }),
+/* 883 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

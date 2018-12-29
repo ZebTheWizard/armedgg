@@ -70,3 +70,24 @@ if (! function_exists('upload_image')) {
     return \Storage::cloud()->url($path);
   }
 }
+
+if (! function_exists('liveOnTwitch')) {
+  function liveOnTwitch($username) {
+    $ch = curl_init();
+          curl_setopt($ch, CURLOPT_URL, "https://api.twitch.tv/helix/streams?user_login=" . urlencode($username));
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+          curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+
+          curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Accept: application/vnd.twitchtv.v5+json',
+            'Client-ID: '. env('TWITCH_HELIX_KEY')
+          ]);
+    $result = json_decode(curl_exec($ch));
+    curl_close($ch);
+    if (isset($result->data)) {
+      return count($result->data) > 0;
+    } else {
+      return false;
+    }
+  }
+}

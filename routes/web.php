@@ -3,6 +3,7 @@
 use App\User;
 use Illuminate\Support\Facades\Schema;
 use App\Player;
+use App\Streamer;
 // use \DB;
 /*
 |--------------------------------------------------------------------------
@@ -24,12 +25,18 @@ Route::get('/', function () {
       ->orderBy('created_at', 'desc')
       ->first();
     $player = Player::find($streamer->player_id);
-    return view('home')->with('player', $player);
+    $streamers = Streamer::where('twitch_live', true)->inRandomOrder()->limit(4)->get();
+    return view('home', [
+      "player" => $player,
+      "streamers" => $streamers
+    ]);
   } catch (\Exception $e) {
     return view('home');
   }
 });
 
+
+Route::get('/twitch/{username}', 'PlayerController@twitch');
 Route::get('/faq', 'FaqController@publicview');
 
 Route::get('/sponsors', 'SponsorController@publicview');

@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-      $schedule->command('streamer:featured')->everyThirtyMinutes();
+      $schedule->command('streamer:featured')->everyFiveMinutes();
         // $schedule->command('inspire')
         //          ->hourly();
     }
