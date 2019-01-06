@@ -2,7 +2,7 @@
   <div class="container">
     <div class="navbar-brand">
       <a class="navbar-item" href="/">
-        <img src="/png/logo.png" alt="" width="35" height="35" style="max-height: 35px">
+        <img src="/png/logo.png" alt="" width="50" height="50" style="max-height: 50px; margin-right: 0.5rem">
         <span class="is-size-4 has-text-weight-bold">{{ config('app.name', 'Laravel') }}</span>
       </a>
 
