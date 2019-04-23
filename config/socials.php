@@ -11,13 +11,13 @@ return [
     [
       "icon" => "fab fa-discord",
       "name" => "discord",
-      "link" => "https://discord.gg/aGWmKND",
+      "link" => "https://discord.gg/qpRPBGJ",
       "color" => "#7289da"
     ],
     [
       "icon" => "fab fa-youtube",
       "name" => "youtube",
-      "link" => "https://youtube.com/armedgg",
+      "link" => "https://www.youtube.com/channel/UCPVfrbxJUXrl-QQUlErZAfQ",
       "color" => "#ff0000"
     ],
     [

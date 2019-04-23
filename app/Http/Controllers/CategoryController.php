@@ -20,8 +20,6 @@ class CategoryController extends Controller
       ]);
       $category->parent_id = $request->parent_id;
       $category->save();
-      $category->path = renderCategoryDesc($category);
-      $category->save();
       return back();
     }
 
