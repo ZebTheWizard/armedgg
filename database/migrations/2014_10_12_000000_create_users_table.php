@@ -15,13 +15,11 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->engine = 'InnoDB';
-            $table->primary('id');
-            $table->string('id', 36)->index();
+            $table->increments('id');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('name');
+            $table->boolean('verified')->default(false);
             $table->string('password');
-            $table->boolean('isAdmin')->default(false);
-            $table->boolean('isMod')->default(false);
             $table->rememberToken();
             $table->timestamps();
         });

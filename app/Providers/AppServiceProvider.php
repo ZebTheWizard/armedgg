@@ -15,6 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+      // \Config::set("navigation.test", "fdsa");
       view()->composer('*', function($view){
           view()->share('v', function ($name, $e='is-active') use($view) {
             return $view->getName() === $name ? $e : '';
@@ -23,17 +24,16 @@ class AppServiceProvider extends ServiceProvider
             return $view->getName() !== $name ? $e : '';
           });
       });
-      // Validator::extend('liveurl', function ($attribute, $url) {
-      //   if(!$url || !is_string($url)){
-      //         return false;
-      //   }
-      //   if( ! preg_match('/^http(s)?:\/\/[a-z0-9-]+(\.[a-z0-9-]+)*(:[0-9]+)?(\/.*)?$/i', $url) ){
-      //       return false;
-      //   }
-      //   $client = new Client(['http_errors' => false]);
-      //   $status = $client->request('GET', $url)->getStatusCode();
-      //   return $status === 200;
-      // });
+
+      \Illuminate\Support\Collection::macro('recursive', function () {
+          return $this->map(function ($value) {
+              if (is_array($value) || is_object($value)) {
+                  return collect($value)->recursive();
+              }
+
+              return $value;
+          });
+      });
     }
 
     /**

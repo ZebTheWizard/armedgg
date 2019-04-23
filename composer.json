@@ -16,6 +16,7 @@
         "laravel/tinker": "^1.0",
         "league/flysystem-aws-s3-v3": "^1.0",
         "romanzipp/laravel-twitch": "^1.0",
+        "spatie/laravel-permission": "^2.36",
         "sudiptpa/guid": "^1.0",
         "webpatser/laravel-uuid": "^3.0"
     },

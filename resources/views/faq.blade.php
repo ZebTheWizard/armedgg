@@ -2,13 +2,15 @@
 
 @section('content')
 
-@foreach($faqs as $faq)
-<section class="section">
+
+<section>
   <div class="container">
-    <div class="title">{{$faq->question}}</div>
-    <p>{{ $faq->answer }}</p>
+    @foreach($faqs as $faq)
+      <h4>{{ $faq->question }}</h4>
+      <p>{{ $faq->answer }}</p>
+    @endforeach
   </div>
 </section>
-@endforeach
+
 
 @endsection

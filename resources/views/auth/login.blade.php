@@ -1,57 +1,43 @@
-@extends('layouts.main-layout')
+@extends('layouts.main-layout', ["includeNavigation" => false])
 
 @section('content')
 
+<section>
+  <div class="container">
 
-<section class="hero is-white is-fullheight">
-  <!-- <div class="hero-body"> -->
-    <div class="container" style="padding-top: 2rem">
-      <div class="title">
-        Login
+    <div class="h4">Login</div>
+    <form action="{{ route('login') }}" method="post">
+      @csrf
+      <input type="hidden" name="redirect" value="{{ app('request')->input('redirect') }}">
+      <div class="col mb-3">
+        <label for="email">Email Address</label>
+        <input type="email" name="email" id="email" class="p-3"  placeholder="Email"  value="{{ old('email') }}" required>
       </div>
-      <form method="post" action="{{ route('login') }}">
-        @csrf
 
-        <div class="field">
-          <label for="email" class="label">Email Address</label>
-          <div class="control">
-            <input id="email"
-                   name="email"
-                   class="input form-control{{ $errors->has('email') ? ' is-danger' : '' }}"
-                   type="email"
-                   placeholder="Email Address"
-                   value="{{ old('email') }}"
-                   required>
-          </div>
-          @if ($errors->has('email'))
-              <p class="help is-danger">{{ $errors->first('email') }}</p>
-          @endif
-        </div>
+      <div class="col mb-3">
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" class="p-3"  placeholder="Password"  value="{{ old('password') }}" required>
+      </div>
 
-        <div class="field">
-          <label for="password" class="label">Password</label>
-          <div class="control">
-            <input id="password"
-                   name="password"
-                   class="input form-control{{ $errors->has('password') ? ' is-danger' : '' }}"
-                   type="password"
-                   placeholder="Secure password"
-                   value="{{ old('password') }}"
-                   required>
-          </div>
-          @if ($errors->has('password'))
-              <p class="help is-danger">{{ $errors->first('password') }}</p>
-          @endif
-        </div>
+      <div class="col mb-3">
+        <label for="remember" style="margin:0">
+          <input class="d-inline" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }} style="width:20px">
+          Remember Me</label>
+      </div>
 
-        <div class="field">
-          <input class="is-checkradio is-info" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-          <label for="remember" style="margin:0">Remember Me</label>
-        </div>
-        <button type="submit" class="button is-medium is-info" name="submit">Login</button>
-      </form>
-    </div>
-  <!-- </div> -->
+      <button type="submit" class="btn btn-blue" name="submit">Login</button>
+    </form>
+  </div>
 </section>
+
+@if ($errors->any())
+    <div class="p-3 bg-red m-1">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 
 @endsection

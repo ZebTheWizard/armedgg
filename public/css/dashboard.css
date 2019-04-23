@@ -1,0 +1,94 @@
+html,
+body {
+  font-size: 10px;
+}
+
+.navcheck {
+  position: absolute;
+  left: -200%;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-rows: 70px 1fr;
+  grid-template-columns: 250px 1fr;
+  grid-template-areas: "navtop header" "nav main";
+  height: 100vh;
+  overflow: hidden;
+}
+
+.dashboard .btn {
+  line-height: 0.9rem;
+}
+
+.dashboard .header {
+  grid-area: header;
+  height: 70px;
+  background-color: #262932;
+}
+
+.dashboard .menu {
+  grid-area: menu;
+}
+
+.dashboard .main {
+  grid-area: main;
+  background-color: #313541;
+  overflow-y: scroll;
+  overflow-x: auto;
+}
+
+.dashboard .nav-header {
+  grid-area: navtop;
+  background: #222;
+}
+
+.dashboard .nav {
+  grid-area: nav;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  background: #262932;
+}
+
+.dashboard .footer {
+  grid-area: footer;
+}
+
+.dashboard .menu {
+  list-style-type: none;
+  padding: 0;
+  margin-top: 0;
+}
+
+.dashboard .menu .item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.dashboard .menu .link {
+  display: block;
+  padding: 1rem 2rem;
+  color: #afb4c2;
+  text-decoration: none;
+}
+
+.dashboard .menu .link:hover,
+.dashboard .menu .link:focus {
+  color: #fff;
+  background-color: #1b1d24;
+}
+
+.navcheck:checked + .dashboard {
+  grid-template-rows: 70px 1fr;
+  grid-template-columns: 1fr;
+  grid-template-areas: "header" "main";
+}
+
+.navcheck:checked + .dashboard .nav,
+.navcheck:checked + .dashboard .nav-header {
+  display: none;
+}
+

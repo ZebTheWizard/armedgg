@@ -9,24 +9,29 @@
 <!-- Scripts -->
 <!-- <script src="{{ asset('js/app.js') }}" defer></script> -->
 
-<script src="/js/header.js" charset="utf-8"></script>
+<!-- <script src="/js/header.js" charset="utf-8"></script> -->
 <!-- Fonts -->
-<link rel="dns-prefetch" href="//fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
+<!-- <link rel="dns-prefetch" href="//fonts.gstatic.com"> -->
+<link href="https://fonts.googleapis.com/css?family=Fira+Sans:900i,700|Martel:400,700" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css?family=Merriweather:900i|Amiko:400|Montserrat:600|Lora:400" rel="stylesheet" />
+<!-- <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet"> -->
+<link rel="stylesheet" href="/css/main.min.css">
 
 <!-- Styles -->
 <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-NJXGk7R+8gWGBdutmr+/d6XDokLwQhF1U3VA7FhvBDlOq7cNdI69z7NQdnXxcF7k" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-extensions@4.0.0/bulma-checkradio/dist/css/bulma-checkradio.min.css" integrity="sha256-QTYXaSH/nxuIu+zAqx/sarAQCSf3PZbgbP0bNw3TI+Q=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-extensions@4.0.0/bulma-pageloader/dist/css/bulma-pageloader.min.css" integrity="sha256-B380x3L+I8fuC4cOBYn/3mA/9rXq4mz/oZM5kgOF3b8=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-extensions@4.0.0/bulma-pageloader/dist/css/bulma-pageloader.min.css" integrity="sha256-B380x3L+I8fuC4cOBYn/3mA/9rXq4mz/oZM5kgOF3b8=" crossorigin="anonymous"> -->
 
-<link rel="dns-prefetch" href="/png/banner.png">
-<link rel="dns-prefetch" href="/png/watermark.png">
+<!-- <link rel="dns-prefetch" href="/png/banner.png">
+<link rel="dns-prefetch" href="/png/watermark.png"> -->
 
-<script src="https://cdn.jsdelivr.net/npm/bulma-extensions@4.0.0/dist/js/bulma-extensions.min.js" integrity="sha256-q4zsxO0fpPm6VhtL/9QkCFE5ZkNa0yeUxhmt1VO1ev0=" crossorigin="anonymous"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/bulma-extensions@4.0.0/dist/js/bulma-extensions.min.js" integrity="sha256-q4zsxO0fpPm6VhtL/9QkCFE5ZkNa0yeUxhmt1VO1ev0=" crossorigin="anonymous"></script> -->
+
+
 <script src="https://embed.twitch.tv/embed/v1.js"></script>
 
-<link href="{{ asset('css/app.css') }}" rel="stylesheet">
+<!-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> -->
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -47,8 +52,10 @@
      });
 </script>
 
+@yield('header')
 
-<script type="text/javascript">
+
+<!-- <script type="text/javascript">
   window.showNavbar = function () {
     var style = document.getElementById('navbarlinks').style
     if(style.display === 'block') {
@@ -58,4 +65,4 @@
     }
 
   }
-</script>
+</script> -->

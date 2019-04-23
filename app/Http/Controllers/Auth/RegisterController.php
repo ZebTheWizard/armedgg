@@ -62,11 +62,19 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user =  User::create([
             'email' => $data['email'],
+            'name' => $data['name'],
             'password' => Hash::make($data['password']),
-            'isAdmin' => true,
-            'isMod' => true,
+            "verified" => true
         ]);
+
+        if (User::count() <= 1) {
+          $seeder = new \RolesAndPermissionsSeeder();
+          $seeder->run();
+          $user->assignRole('admin');
+        }
+
+        return $user;
     }
 }

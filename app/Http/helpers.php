@@ -91,3 +91,39 @@ if (! function_exists('liveOnTwitch')) {
     }
   }
 }
+
+if (! function_exists('in_array_r')) {
+  function in_array_r($needle, $haystack, $strict = false) {
+    foreach ($haystack as $item) {
+        if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && in_array_r($needle, $item, $strict))) {
+            return true;
+        }
+    }
+    return false;
+  }
+}
+
+if (!function_exists('pluck_r')) {
+  function pluck_r($key, $arr) {
+    $res=[];
+    foreach($arr as $item) {
+      if (isset($item[$key])) {
+        array_push($res, $item[$key]);
+        if (count($item['list']) > 0) {
+          $res = array_merge($res, pluck_r($key, $item['list']));
+        }
+      }
+    }
+    return $res;
+  }
+}
+
+function renderCategoryDesc($category, $divider=" > ", $res="") {
+  if (!$category) return "-";
+  $res = $category->name . $res;
+  if ($category->parent) {
+    $res = $divider . $res;
+    $res = renderCategoryDesc($category->parent, $divider) . $res;
+  }
+  return $res;
+}

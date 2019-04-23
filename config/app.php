@@ -232,6 +232,8 @@ return [
         'Player' => App\Player::class,
         'Team' => App\Team::class,
         'User' => App\User::class,
+        'Role' => Spatie\Permission\Models\Role::class,
+        'Permission' => Spatie\Permission\Models\Permission::class,
     ],
 
 ];

@@ -1,73 +1,57 @@
-@extends('layouts.main-layout')
+@extends('layouts.main-layout', ["includeNavigation" => false])
 
 @section('content')
 
-<section class="hero is-white is-fullheight">
-  <!-- <div class="hero-body"> -->
-    <div class="container" style="padding-top: 2rem">
-      <div class="title">
-        Register
-        @if(isset($invite))
-        | <a href="/login" class="has-text-info">Login</a>
-        @endif
+<section>
+  <div class="container">
+
+    <div class="h4">Register</div>
+    <form action="{{ route('register') }}" method="post">
+      @csrf
+      @if(isset($invite))
+        <input type="hidden" name="id" value="{{ $invite->id }}">
+        <input type="hidden" name="nonce" value="{{ $invite->nonce }}">
+      @endif
+      <div class="col mb-3">
+        <label for="name">Name</label>
+        <input type="text" name="name" id="name" class="p-3"  placeholder="Name"  value="{{ old('name') }}" required>
       </div>
-      <form method="post" action="{{ isset($invite) ? '/i/createuser' : route('register') }}">
-        @csrf
-        @if(isset($invite))
-          <input type="hidden" name="id" value="{{ $invite->id }}">
-          <input type="hidden" name="nonce" value="{{ $invite->nonce }}">
-        @endif
-        <div class="field">
-          <label for="email" class="label">Email Address</label>
-          <div class="control">
-            <input id="email"
-                   name="email"
-                   class="input form-control{{ $errors->has('email') ? ' is-danger' : '' }}"
-                   type="email"
-                   placeholder="Email Address"
-                   value="{{ old('email') }}"
-                   required>
-          </div>
-          @if ($errors->has('email'))
-              <p class="help is-danger">{{ $errors->first('email') }}</p>
-          @endif
-        </div>
 
-        <div class="field">
-          <label for="password" class="label">Password</label>
-          <div class="control">
-            <input id="password"
-                   name="password"
-                   class="input form-control{{ $errors->has('password') ? ' is-danger' : '' }}"
-                   type="password"
-                   placeholder="Secure password"
-                   value="{{ old('password') }}"
-                   required>
-          </div>
-          @if ($errors->has('password'))
-              <p class="help is-danger">{{ $errors->first('password') }}</p>
-          @endif
-        </div>
+      <div class="col mb-3">
+        <label for="email">Email Address</label>
+        <input type="email" name="email" id="email" class="p-3"  placeholder="Email"  value="{{ old('email') }}" required>
+      </div>
 
-        <div class="field">
-          <label for="password_confirmation" class="label">Password</label>
-          <div class="control">
-            <input id="password_confirmation"
-                   name="password_confirmation"
-                   class="input form-control{{ $errors->has('password_confirmation') ? ' is-danger' : '' }}"
-                   type="password"
-                   placeholder="Match secure password"
-                   required>
-          </div>
-          @if ($errors->has('password_confirmation'))
-              <p class="help is-danger">{{ $errors->first('password_confirmation') }}</p>
-          @endif
-        </div>
+      <div class="col mb-3">
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" class="p-3"  placeholder="Password"  value="{{ old('password') }}" required>
+      </div>
 
-        <button type="submit" class="button is-medium is-info" name="submit">Register</button>
-      </form>
-    </div>
-  <!-- </div> -->
+      <div class="col mb-3">
+        <label for="password">Confirm Password</label>
+        <input type="password" name="password_confirmation" id="password_confirmation" class="p-3"  placeholder="Password"  value="{{ old('password_confirmation') }}" required>
+      </div>
+
+      <div class="col mb-3">
+        <label for="remember" style="margin:0">
+          <input class="d-inline" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }} style="width:20px">
+          Remember Me</label>
+      </div>
+
+      <button type="submit" class="btn btn-blue" name="submit">Register</button>
+    </form>
+  </div>
 </section>
+
+@if ($errors->any())
+    <div class="p-3 bg-red m-1">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
 
 @endsection

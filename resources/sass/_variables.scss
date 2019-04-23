@@ -1,20 +1,25 @@
 
 // Body
-$body-bg: #f8fafc;
+$red: #FF3334;
+$blue: #3EB5F7;
+$sea: #313541;
+$green: #44AF69;
+$dark: #31393C;
+$white: #fff;
+$grey: darken($white, 10%);
+$black: #222;
+$cornsilk: cornsilk;
 
-// Typography
-$font-family-sans-serif: "Nunito", sans-serif;
-$font-size-base: 0.9rem;
-$line-height-base: 1.6;
+$headerFamily: "Merriweather";
+$bodyFamily: "Amiko";
 
-// Colors
-$blue: #3490dc;
-$indigo: #6574cd;
-$purple: #9561e2;
-$pink: #f66D9b;
-$red: #e3342f;
-$orange: #f6993f;
-$yellow: #ffed4a;
-$green: #38c172;
-$teal: #4dc0b5;
-$cyan: #6cb2eb;
+$colors: (
+  red: $red,
+  blue: $blue,
+  sea: $sea,
+  green: $green,
+  dark: $dark,
+  white: $white,
+  black: $black,
+  cornsilk: $cornsilk,
+);

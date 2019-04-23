@@ -2,30 +2,25 @@
 
 @section('content')
 
-@foreach($sponsors as $sponsor)
-<section class="section">
+<section>
   <div class="container">
-    <a href="{{ $sponsor->url }}" target="_blank">
-      <article class="media box">
-        @if($sponsor->image)
-        <figure class="media-left">
-          <p class="image is-128x128">
-            <img src="{{ $sponsor->image }}">
-          </p>
-        </figure>
-        @endif
-        <div class="media-content">
-          <div class="content">
-            <div class="title">{{ $sponsor->name }}</div>
-            <p>{{ $sponsor->about}}</p>
+    <div class="row">
+        @forelse($sponsors as $sponsor)
+          <div class="col-3">
+              <img src="{{ $sponsor->image }}">
           </div>
-        </div>
-      </article>
-    </a>
-
-
+          <div class="col-9">
+            <h5 class="mt-0 mb-3">{{ $sponsor->name }}</h5>
+            <p>{{ $sponsor->description }}</p>
+            <a href="{{ $sponsor->link }}" class="btn btn-dark">View</a>
+          </div>
+        @empty
+          <p class="m-0">Currently we have no sponsors. If you would like to be our sponsor, please contact us.</p>
+        @endforelse
+    </div>
+    
   </div>
 </section>
-@endforeach
+
 
 @endsection

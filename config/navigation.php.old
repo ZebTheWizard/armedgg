@@ -1,0 +1,52 @@
+<?php
+
+return [
+  "available_navigation" => [
+    [
+      "name" => "FAQ",
+      "desc" => "faq page",
+      "link" => "/faq",
+      "list" => [],
+    ],
+  ],
+  "used_navigation" => [
+    [
+      "name" => "Home",
+      "desc" => "home page",
+      "link" => "/",
+      "list" => [],
+    ],
+    [
+      "name" => "Sponsors",
+      "desc" => "sponsor page",
+      "link" => "/sponsors",
+      "list" => [],
+    ],
+    [
+      "name" => "News",
+      "desc" => "news page",
+      "link" => "/news",
+      "list" => [],
+    ],
+    [
+      "name" => "Roster",
+      "desc" => "roster page: show all players",
+      "link" => "/roster",
+      "list" => [
+        [
+          "name" => "Players",
+          "desc" => "news page",
+          "link" => "/roster/players",
+          "list" => [],
+        ],
+        [
+          "name" => "Streamers",
+          "desc" => "news page",
+          "link" => "/roster/streamers",
+          "list" => [],
+        ],
+
+      ],
+    ],
+  ]
+];

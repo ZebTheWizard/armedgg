@@ -1,23 +1,87 @@
-<nav class="navbar is-white is-fixed-top" role="navigation" aria-label="main navigation">
-  <div class="container">
-    <div class="navbar-brand">
-      <a class="navbar-item" href="/">
-        <img src="/png/logo.png?v=1" alt="" width="50" height="50" style="max-height: 50px; margin-right: 0.5rem">
-        <span class="is-size-4 has-text-weight-bold">{{ config('app.name', 'Laravel') }}</span>
-      </a>
+<?php
 
-      <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" onclick="showNavbar()">
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-        <span aria-hidden="true"></span>
-      </a>
-    </div>
-    <div class="navbar-end is-hidden-touch" id="navbarlinks">
-      <a class="navbar-item" href="/">Home</a>
-      <a class="navbar-item" href="/roster/all">Roster</a>
-      <a class="navbar-item" href="/sponsors">Sponsors</a>
-      <a class="navbar-item" href="/faq">FAQ</a>
-    </div>
-  </div>
+  function renderNav($config) {
+    $res = "<ul class='navlinks'>";
+    foreach($config as $item) {
+      $res .= item($item['link'], $item['name'], $item['list']);
+    }
+    $res .= "</ul>";
+    return $res;
+  }
 
-</nav>
+  function renderNavMobile($config) {
+    $res = "<ul class='navlinks'>";
+    foreach($config as $item) {
+      $res .= itemMobile($item['link'], $item['name'], $item['list']);
+    }
+    $res .= "</ul>";
+    return $res;
+  }
+
+  function item($link, $name, $list=[], $type="") {
+    if (count($list) > 0) {
+      $res = "<li class='flyout$type'>";
+    } else {
+      $res = "<li>";
+    }
+
+    $res .= navlink($link, $name);
+    if (count($list) > 0) {
+      $res .= "<ul class='flyout-content navlinks stacked'>";
+    }
+    foreach($list as $item) {
+      $res .= item($item['link'], $item['name'], $item['list'], '-alt');
+    }
+    if (count($list) > 0) {
+      $res .= "</ul>";
+    }
+    $res .= "<li>";
+    return $res;
+  }
+
+  function itemMobile($link, $name, $list) {
+    $res = navlink($link, $name);
+    if (count($list) > 0) {
+      foreach($list as $item) {
+        $res .= itemMobile($item['link'], $item['name'], $item['list']);
+      }
+    }
+    return $res;
+  }
+
+  function navlink($link, $name) {
+    return "<a href='$link' class='d-block'>$name</a>";
+  }
+
+?>
+
+<nav class="fixed bg-black text-white" >
+    <!-- <div id="read-progress"></div> -->
+    <div class="container">
+      <div class="row" style="min-height: 30px;">
+        <div class="col-5 flex-lc show-gt-tablet-portrait">
+
+          {!! renderNav(\App\Navigation::fetch()->used) !!}
+
+
+        </div>
+        <div class="col-2 flex-cc">
+          <a href="/"><img src="/logo-white.png?v=1"class="my-1 mx-auto" style="max-width: 100%; height: auto;" width="80" id="logo"></a>
+        </div>
+        <div class="col flex-rc">
+          @foreach(config('socials.local') as $social)
+          <a href="{{ $social['link'] }}" class="px-2"><i class="{{ $social['icon'] }}"></i></a>
+          @endforeach
+
+          <label for="navmenu" class="show-lt-tablet-landscape parent ml-3"><i class="far fa-bars fa-large"></i>
+            <input type="checkbox" class="navcheck" id="navmenu">
+            <div class="dropnav dropnav-small">
+                {!! renderNavMobile(\App\Navigation::fetch()->used) !!}
+
+            </div>
+          </label>
+        </div>
+      </div>
+    </div>
+
+  </nav>

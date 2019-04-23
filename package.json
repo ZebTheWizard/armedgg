@@ -26,6 +26,10 @@
         "twitch": "^1.0.5",
         "twitch-pubsub-client": "^1.0.1",
         "url-exists": "^1.0.3",
-        "vue-avatar-cropper": "0.0.28"
+        "vue-avatar-cropper": "0.0.28",
+        "vue-checkbox-radio": "^0.6.0",
+        "vue-material": "^1.0.0-beta-10.2",
+        "vuedraggable": "^2.20.0",
+        "vuetify": "^1.5.8"
     }
 }
