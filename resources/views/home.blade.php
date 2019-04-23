@@ -56,23 +56,6 @@
   </div>
 </section>
 
-<section>
-  <div class="container">
-    <div class="h2" id="about">About the Team</div>
-    <p>ArmedGG is a growing team of gamers, streamers, and other creators. We try to find people from varying diversity.
-    We accept all gamers whether they play FPS, RPG or the slow, casual playthroughs! Our goal is to reach as many people as viewers as possible. Check out the roster section and find a team for you!
-    Because ArmedGG is more relaxed than most other gaming teams, gamers are free to stream or play whatever game they want. Sometimes, it's nice to try something different.
-    However, if you are more of a competitive player, we have that too. ArmedGG is on the path to Professional ESports gaming but we will need your help before we can make any big steps. If you find a team that interested you don't hesitate to ask, we are looking to expand and pick up new players.
-    If you would like to join please message our Twitter account to get started!</p>
-  </div>
-</section>
-
-<section>
-  <div class="container">
-    <div class="h2" id="how-to-join">How to Join</div>
-    <p>To be apart of a team you must have an invite from a leader of Armed Gaming. You can contact a leader through the <a href="//twitter.com/armedgg">@armedgg</a> Twitter Account.</p>
-  </div>
-</section>
 
 
 <script type="text/javascript">

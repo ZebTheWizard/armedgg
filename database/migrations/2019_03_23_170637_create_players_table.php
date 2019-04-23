@@ -17,6 +17,7 @@ class CreatePlayersTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('avatar')->nullable();
+            $table->string('snippet')->nullable();
 
             $table->string('instagram')->nullable();
             $table->string('twitch')->nullable();

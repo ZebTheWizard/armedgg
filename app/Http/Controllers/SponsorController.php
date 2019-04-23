@@ -14,22 +14,28 @@ class SponsorController extends Controller
     }
     
     public function create(Request $request) {
-      $update = [
+      $sponsor = Sponsor::find($request->id);
+
+      $data = [
+        "name" => $request->name,
         "description" => $request->description,
         "link" => $request->link,
       ];
       if ($request->photo) {
-        $update['image'] = upload_image($request, [
+        $request->validate(["photo" => "image|file|max:2048"]);
+        $data['image'] = upload_image($request, [
           "path" => "/sponsor_images",
           "width" => 150,
           "square" => true,
           "quality" => 60
         ]);
       }
-  
-      Sponsor::updateOrCreate([
-        "name" => $request->name,
-      ], $update);
+
+      if ($sponsor) {
+        $sponsor->update($data);
+      } else {
+        Sponsor::create($data);
+      }
   
       return back();
     }

@@ -26,9 +26,9 @@
         <tr>
           <td class="pl-3">{{ $sponsor->id }}</td>
           <td>{{ $sponsor->name }}</td>
-          <td>{{ $sponsor->link }}</td>
-          <td>{{ $sponsor->description }}</td>
-          <td class="text-right pr-3">
+          <td><a href="{{ $sponsor->link }}">{{ substr($sponsor->link, 0, 10) }}...</a></td>
+          <td>{{ substr($sponsor->description, 0, 40) }}...</td>
+          <td class="text-right pr-3" style="min-width: 100px">
               <label for="addsponsormodal" class="btn btn-blue py-3 px-4" @click="setSponsor({{$sponsor}})"><i class="fal fa-pencil"></i></label>
               <label for="deletemodal" class="btn btn-red py-3 px-4" @click="setDelete({{$sponsor->id}})"><i class="fal fa-times"></i></label>          </td>
         </tr>
@@ -55,7 +55,7 @@
       <section class="pt-2">
         <div class="container" id="root">
           @csrf
-
+          <input type="hidden" name="id" :value="sponsor.id">
           <div class="col mb-3">
             <label for="name">Name</label>
             <input class="input" type="text" name="name" id="name" :value="sponsor.name" placeholder="Name" required>

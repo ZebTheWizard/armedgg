@@ -59,6 +59,7 @@
         <div class="container" id="root">
 
             @csrf
+            <input type="hidden" name="id" id="id" :value="player.id">
             <input type="hidden" name="country_flag" id="country_flag" :value="player.country_flag">
 
             <div class="col mb-3">

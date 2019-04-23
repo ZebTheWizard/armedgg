@@ -22,7 +22,11 @@ class PlayerController extends Controller
   }
 
   public function create(Request $request) {
-    $update = [
+    
+    $player = Player::find($request->id);
+
+    $data = [
+      "name" => $request->name,
       "category_id" => (int)$request->category,
       "country_name" => $request->country_name,
       "country_flag" => $request->country_flag,
@@ -33,17 +37,21 @@ class PlayerController extends Controller
       "snippet" => $request->snippet
     ];
     if ($request->photo) {
-      $update['avatar'] = upload_image($request, [
+      $request->validate(["photo" => "image|file|max:2048"]);
+      $data['avatar'] = upload_image($request, [
         "path" => "/player_avatars",
         "width" => 150,
         "square" => true,
         "quality" => 60
       ]);
     }
-
-    Player::updateOrCreate([
-      "name" => $request->name,
-    ], $update);
+    // if ($player) dd($player);
+    
+    if ($player) {
+      $player->update($data);
+    } else {
+      Player::create($data);
+    }
 
     return back();
   }

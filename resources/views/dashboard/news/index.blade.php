@@ -43,7 +43,6 @@
 
 <form action="/dashboard/news/create" method="post" autocomplete="off" enctype="multipart/form-data">
   <input type="checkbox" class="modal-check" id="addnewsmodal">
-
   <div class="modal">
     <label for="addnewsmodal" class="modal-background"></label>
     <div class="modal-header bg-white container">
@@ -56,7 +55,7 @@
       <section class="pt-2">
         <div class="container" id="root">
           @csrf
-          <input type="hidden" name="old_title" :value="news.title">
+          <input type="hidden" name="id" :value="news.id">
           <div class="col mb-3">
             <label for="title">Title</label>
             <input class="input" type="text" name="title" id="title" :value="news.title" placeholder="Title" required>

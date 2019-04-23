@@ -17,7 +17,7 @@ class CreateNewsTable extends Migration
             $table->increments('id');
             $table->integer('user_id');
             $table->string('title');
-            $table->string('image')->default('https://via.placeholder.com/350x250/222222/aaaaaa.png?text=News+Article');
+            $table->string('image')->default('https://via.placeholder.com/400x225/222222/aaaaaa.png?text=News+Article');
             $table->longText('text');
             $table->string('slug');
             $table->bigInteger('views')->default(0);

@@ -19,14 +19,17 @@ class NewsController extends Controller
     }
 
     public function create(Request $request) {
-        $update = [
+        $article = News::find($request->id);
+
+        $data = [
           "title" => $request->title,
           "text" => $request->text,
           "user_id" => Auth::id(),
           'slug' => Str::slug($request->title),
         ];
         if ($request->photo) {
-          $update['image'] = upload_image($request, [
+          $request->validate(["photo" => "image|file|max:2048"]);
+          $data['image'] = upload_image($request, [
             "path" => "/news_images",
             "width" => 400,
             "height" => 225,
@@ -34,10 +37,12 @@ class NewsController extends Controller
             "quality" => 60
           ]);
         }
-    
-        News::updateOrCreate([
-          "title" => $request->old_title,
-        ], $update);
+
+        if ($article) {
+          $article->update($data);
+        } else {
+          News::create($data);
+        }
     
         return back();
       }

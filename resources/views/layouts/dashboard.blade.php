@@ -1,4 +1,4 @@
-@extends('layouts.main-layout', ["includeNavigation" => false])
+@extends('layouts.main-layout', ["includeNavigation" => false, "includeFooter" => false])
 @section('header')
 <link rel="stylesheet" href="/css/dashboard.css">
 <link rel="stylesheet" href="/css/tablesort.css">

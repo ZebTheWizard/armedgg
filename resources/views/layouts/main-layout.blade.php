@@ -8,7 +8,10 @@
     @endif
 
     @yield('content')
-
+    @if(!isset($includeNavigation))
+      @include('layouts.main-footer')
+    @endif
+    
     @yield('scripts')
     <script src="/js/main.js" charset="utf-8"></script>
 </body>

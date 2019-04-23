@@ -15,7 +15,7 @@ class CreateSponsorsTable extends Migration
     {
         Schema::create('sponsors', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('image');
+            $table->string('image')->default('https://via.placeholder.com/350x250/222222/aaaaaa.png?text=Sponsor+Logo');;
             $table->string('name');
             $table->longText('description');
             $table->string('link');
