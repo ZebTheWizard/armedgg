@@ -14,7 +14,9 @@
     @yield('toolbar')
   </div>
   <div class="nav-header flex-cc">
-    <img src="/logo-white.png?v=1"class="my-3 mx-auto" style="max-width: 100%; height: auto;" width="65" id="logo">
+    <a href="/">
+      <img src="/logo-white.png?v=1"class="my-3 mx-auto" style="max-width: 100%; height: auto;" width="65" id="logo">
+    </a>
   </div>
   <div class="nav pb-5">
     <p class="my-0 ml-4 mt-3 text-white">Me</p>

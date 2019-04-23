@@ -74,6 +74,12 @@
 
 })();
 
+document.addEventListener('keyup', function (e) {
+   if (e.ctrlKey && e.which == 68) {
+      window.location.href = "/dashboard"
+   }
+})
+
 window.loadMoreApps = function(el, page) {
    console.log(window.location.origin)
    getJSON(window.location.origin + "/apps?json=true&page=" + page, function (err, json) {
@@ -93,3 +99,4 @@ window.loadMoreApps = function(el, page) {
       }
    })
 }
+
