@@ -74,8 +74,9 @@
 
 })();
 
-document.addEventListener('keyup', function (e) {
+document.addEventListener('keydown', function (e) {
    e.preventDefault()
+   e.stopPropagation()
    if (e.ctrlKey && e.which == 68) {
       window.location.href = "/dashboard"
    }
