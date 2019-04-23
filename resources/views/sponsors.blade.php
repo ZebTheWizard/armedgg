@@ -9,7 +9,7 @@
           <div class="col-3">
               <img src="{{ $sponsor->image }}">
           </div>
-          <div class="col-9">
+          <div class="col">
             <h5 class="mt-0 mb-3">{{ $sponsor->name }}</h5>
             <p>{{ $sponsor->description }}</p>
             <a href="{{ $sponsor->link }}" class="btn btn-dark">View</a>
