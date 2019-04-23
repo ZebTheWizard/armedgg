@@ -13,7 +13,9 @@
           <img src="{{$player->country_flag}}" alt="flag" height="15">
         </div>
 
-        <p class="m-0 py-1" style="font-size:0.9em;line-height:normal;">{{ $player->category->name }}</p>
+        @if($player->snippet)
+          <p class="m-0 py-1" style="font-size:0.9em;line-height:normal;">{{ $player->snippet }}</p>
+        @endif
         <div class="flex-lc">
           @if($player->twitter)
             <a class="text-white" href="https://twitter.com/{{ $player->twitter }}"><i class="fab fa-twitter mr-2"></i></a>

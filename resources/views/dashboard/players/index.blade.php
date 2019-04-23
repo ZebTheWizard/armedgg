@@ -67,8 +67,13 @@
             </div>
 
             <div class="col mb-3">
+                <label for="snippet">Additional information</label>
+                <input type="text" name="snippet" id="snippet" class="p-3" :value="player.snippet" placeholder="Additional information">
+              </div>
+
+            <div class="col mb-3">
               <label for="name">Avatar</label>
-              <input type="file" name="photo" id="photo" class="p-3" placeholder="Choose Avatar">
+              <input type="file" name="photo" id="photo" class="p-3" placeholder="Choose Avatar" required>
             </div>
 
             <div class="col mb-3">

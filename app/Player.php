@@ -13,7 +13,7 @@ class Player extends Model
     // use \App\Traits\Guid;
 
     protected $fillable = [
-       'name', 'avatar', 'category_id', 'country_flag', 'country_name', 'instagram', 'twitch', 'twitter', 'youtube'
+       'name', 'avatar', 'category_id', 'country_flag', 'country_name', 'instagram', 'twitch', 'twitter', 'youtube', 'snippet'
     ];
 
     // public function user() {

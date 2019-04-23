@@ -64,7 +64,7 @@
 
           <div class="col mb-3">
             <label for="name">Article Image</label>
-            <input type="file" name="photo" id="photo" class="p-3" placeholder="Choose Image">
+            <input type="file" name="photo" id="photo" class="p-3" placeholder="Choose Image" required>
           </div>
 
           <div class="col mb-3">

@@ -30,6 +30,7 @@ class PlayerController extends Controller
       "twitch" => $request->twitch,
       "twitter" => $request->twitter,
       "youtube" => $request->youtube,
+      "snippet" => $request->snippet
     ];
     if ($request->photo) {
       $update['avatar'] = upload_image($request, [

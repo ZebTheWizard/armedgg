@@ -75,9 +75,9 @@
 })();
 
 document.addEventListener('keydown', function (e) {
-   e.preventDefault()
-   e.stopPropagation()
    if (e.ctrlKey && e.which == 68) {
+      e.preventDefault()
+      e.stopPropagation()
       window.location.href = "/dashboard"
    }
 })
