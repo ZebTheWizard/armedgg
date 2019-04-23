@@ -73,7 +73,7 @@
 
             <div class="col mb-3">
               <label for="name">Avatar</label>
-              <input type="file" name="photo" id="photo" class="p-3" placeholder="Choose Avatar" required>
+              <input type="file" name="photo" id="photo" class="p-3" placeholder="Choose Avatar">
             </div>
 
             <div class="col mb-3">
