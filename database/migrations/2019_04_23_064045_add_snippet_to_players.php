@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdatePlayersTable extends Migration
+class AddSnippetToPlayers extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class UpdatePlayersTable extends Migration
      */
     public function up()
     {
-        Schema::table('categories', function (Blueprint $table) {
+        Schema::table('players', function (Blueprint $table) {
             $table->string('snippet')->nullable();
         });
     }
@@ -25,6 +25,8 @@ class UpdatePlayersTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('players', function (Blueprint $table) {
+            $table->dropColumn('snippet');
+        });
     }
 }
