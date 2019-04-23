@@ -1,5 +1,5 @@
 
-<div class="col-3 p-1">
+<div class="col-tablet-portrait-3 p-1">
   <div class="col-12 square">
     <div class="content">
       @if($player->avatar)
