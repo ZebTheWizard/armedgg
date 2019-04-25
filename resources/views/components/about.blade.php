@@ -1,5 +1,5 @@
 {{-- <div class="h6 mb-2" id="about">About the Team</div> --}}
-<p style="font-size: 0.8rem;line-height: 1.3rem;">
+<p style="font-size: 0.8rem;line-height: 1.3rem;" class="mt-1 mb-3">
 ArmedGG is a growing team of gamers, streamers, and other creators. 
 We accept all gamers whether they play FPS, RPG or casual playthroughs! 
 ArmedGG members are free to stream or play whatever game they want. 
