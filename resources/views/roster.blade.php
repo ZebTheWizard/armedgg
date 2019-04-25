@@ -4,7 +4,7 @@
 
 <section>
   <div class="container">
-    <div class="h2">Roster</div>
+    {{-- <div class="h2">Roster</div> --}}
     <?php $show = [] ?>
     @forelse($categories as $category)
       <?php $show[$category->name] = false ?>

@@ -5,7 +5,7 @@
 
 <section>
   <div class="container">
-    <h4>{{ $article->title }}</h4>
+    <h4 class="text-blue">{{ $article->title }}</h4>
     <p>
       <strong>By {{ $article->author->name }} </strong>
       <br>

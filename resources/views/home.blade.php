@@ -47,12 +47,22 @@
 
 <section>
   <div class="container">
-    <div class="h2">Recent News</div>
-    @forelse($articles as $article)
-      @component('components.news', ["article"=> $article])@endcomponent
-    @empty
-      <p class="m-0">Currently there is no news.</p>
-    @endforelse
+    <div class="row">
+      <div class="col-tablet-portrait-8 pr-4">
+        <div class="h4 mb-4">Recent News</div>
+        <hr>
+        @forelse($articles as $article)
+        @component('components.news', ["article"=> $article])@endcomponent
+        @empty
+        <p class="m-0">Currently there is no news.</p>
+        @endforelse
+      </div>
+      <div class="col-tablet-portrait-4 pt-3">
+          <a class="twitter-timeline" data-height="500" data-dnt="true" data-link-color="#19CF86" href="https://twitter.com/armedgg"></a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+      </div>
+    </div>
+    
+
   </div>
 </section>
 
