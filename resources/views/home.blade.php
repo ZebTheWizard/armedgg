@@ -130,10 +130,14 @@
   <script type="text/javascript">
 
         window.onload = function () {
-          @if(isset($streamers) && isset($streamers[0]->stream->title))
-          featured.twitch({!! collect($streamers[0]->stream) !!},{!! $streamers[0] !!})
-          @elseif(isset($streamers) && isset($streamers[count($streamers) - 1]->stream->title))
-          featured.twitch({!! collect($streamers[1]->stream) !!},{!! $streamers[1] !!})
+          @if(isset($streamers))
+            @if(isset($streamers[0]->stream->title))
+            featured.twitch({!! collect($streamers[0]->stream) !!},{!! $streamers[0] !!})
+            @elseif(isset($streamers[count($streamers) - 1]->stream->title))
+            featured.twitch({!! collect($streamers[1]->stream) !!},{!! $streamers[1] !!})
+            @else
+            featured.youtube({!!$ytvideos[0]!!},{!!$ytvideos[0]->player!!})
+            @endif
           @else
           featured.youtube({!!$ytvideos[0]!!},{!!$ytvideos[0]->player!!})
           @endif
