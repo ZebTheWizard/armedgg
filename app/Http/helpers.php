@@ -92,6 +92,94 @@ if (! function_exists('liveOnTwitch')) {
   }
 }
 
+if (! function_exists('getTwitchUserByLogin')) {
+  function getTwitchUserByLogin($channel) {
+    $ch = curl_init();
+          curl_setopt($ch, CURLOPT_URL, "https://api.twitch.tv/kraken/users?login=" . urlencode($channel));
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+          curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+          curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Accept: application/vnd.twitchtv.v5+json',
+            'Client-ID: '. env('TWITCH_HELIX_KEY')
+          ]);
+    $result = json_decode(curl_exec($ch));
+    curl_close($ch);
+    $empty = [
+      "display_name" => null,
+      "_id" => null,
+      "name" => null,
+      "type" => null,
+      "bio" => null,
+      "created_at" => null,
+      "updated_at" => null,
+      "logo" => null,
+    ];
+    return $result->users ? json_decode(json_encode($result->users[0])) : json_decode(json_encode($empty));
+  }
+}
+
+if (! function_exists('getTwitchChannelByUser')) {
+  function getTwitchChannelByUser($user) {
+    $ch = curl_init();
+          curl_setopt($ch, CURLOPT_URL, "https://api.twitch.tv/kraken/channels/" . urlencode($user));
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+          curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+          curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Accept: application/vnd.twitchtv.v5+json',
+            'Client-ID: '. env('TWITCH_HELIX_KEY')
+          ]);
+    $result = json_decode(curl_exec($ch));
+    curl_close($ch);
+    return $result;
+  }
+}
+
+if (! function_exists('getTwitchStreamByUser')) {
+  function getTwitchStreamByUser($user) {
+    $ch = curl_init();
+          curl_setopt($ch, CURLOPT_URL, "https://api.twitch.tv/helix/streams?user_id=" . urlencode($user));
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+          curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+          curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Accept: application/vnd.twitchtv.v5+json',
+            'Client-ID: '. env('TWITCH_HELIX_KEY')
+          ]);
+    $result = json_decode(curl_exec($ch));
+    curl_close($ch);
+    return $result;
+  }
+}
+
+function getYoutubeUploadsFromChannel($channel) {
+  $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=". $channel ."&key=" . env('YOUTUBE_KEY'));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+  $result = json_decode(curl_exec($ch));
+  curl_close($ch);
+  return $result->items[0]->contentDetails->relatedPlaylists->uploads;
+}
+
+function getYoutubeVideosFromPlaylist($playist, $max=10) {
+  $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=$max&playlistId=". $playist ."&key=" . env('YOUTUBE_KEY'));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+  $result = json_decode(curl_exec($ch));
+  curl_close($ch);
+  return $result->items;
+}
+
+function getYoutubeVideoStats($video) {
+  $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/youtube/v3/videos?part=statistics&id=". $video ."&key=" . env('YOUTUBE_KEY'));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
+  $result = json_decode(curl_exec($ch));
+  curl_close($ch);
+  return $result->items[0]->statistics;
+}
+
 if (! function_exists('in_array_r')) {
   function in_array_r($needle, $haystack, $strict = false) {
     foreach ($haystack as $item) {

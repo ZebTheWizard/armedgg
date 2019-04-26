@@ -8,19 +8,40 @@
     <div class="flex-wrap pt-5" style="position:relative">
       <div class="col-tablet-portrait-8">
         <div id="featured-video" class="video"></div>
-        
-
-        <div class="col-12 flex-cc pt-3 text-white" id="video-info" style="display:none">
-          <img id="video-avatar" class="mt-2" src="" width="50" height="50" alt="streamer-avatar" >
+        @if(isset($player))
+        <div class="col-12 flex-cc pt-3 text-white">
+          <img id="video-avatar" class="mt-2" src="{{ $player->streamer->twitch_logo }}" width="50" height="50" alt="streamer-avatar" >
           <div class="flex-sbt ml-3" style="flex-grow: 1">
-            <div class="text-white" style="font-size: 1em;line-height:1em;">
-              <div class="h6 text m-0" id="video-title">...</div>
-              <div id="video-user_name"></div>
-            </div>
-            <div class="h6 text m-0 flex-cc"><i class="fas fa-eye mr-2"></i> <span id="video-views"></span>  </div>
+
+            @if ($stream)
+              <a href="https://twitch.tv/{{ $player->twitch }}" class="text-white" style="font-size: 1em;line-height:1em;">
+                  <div class="h6 text m-0" id="video-title" style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;">{{ $stream->title }}</div>
+                  <div id="video-user_name">{{ $player->streamer->twitch_display_name }}</div>
+              </a>
+              <div class="h6 text m-0 flex-cc"><i class="fas fa-eye mr-2"></i> <span id="video-views">{{ number_format($stream->viewer_count) }}</span>  </div>
+            @else
+              <div class="text-white" style="font-size: 1em;line-height:1em;">
+                <div class="h6 text m-0" id="video-title">...</div>
+                <div id="video-user_name">{{ $player->streamer->twitch_display_name }}</div>
+              </div>
+              <div class="h6 text m-0 flex-cc"><i class="fas fa-eye mr-2"></i> <span id="video-views">OFFLINE</span>  </div>
+            @endif
+
+            
           </div>
         </div>
-
+        {{-- @else --}}
+          <div class="col-12 flex-cc pt-3 text-white">
+            <img id="video-avatar" class="mt-2" src="" width="50" height="50" alt="streamer-avatar" >
+            <div class="flex-sbt ml-3" style="flex-grow: 1">
+              <div class="text-white" style="font-size: 1em;line-height:1em;">
+                <div class="h6 text m-0" id="video-title">...</div>
+                <div id="video-user_name"></div>
+              </div>
+              <div class="h6 text m-0 flex-cc"><i class="fas fa-eye mr-2"></i> <span id="video-views"></span>  </div>
+            </div>
+          </div>
+        {{-- @endif --}}
       </div>
       <div class="col-tablet-portrait-4 pl-5" style="position:relative; min-height:200px">
           <strong :class="['text-white', 'text-bold', 'mr-4', { semitransparent: selected != 'live'}]" @click="select('live')">Live</strong>
@@ -30,8 +51,8 @@
             <div class="pt-3" v-if="selected == 'live'">
               @foreach($streamers as $streamer)
                 @php $stream = $streamer->stream; @endphp
-                @if(isset($stream->title))
-                <div class="mb-4 text-white flex-lc thumbnail" @click="twitch({{collect($stream)}},{{$streamer}})">
+                @if($stream)
+                <div class="mb-4 text-white flex-lc" @click="twitch({{collect($stream)}},{{$streamer}})">
                     <img width="156" height="87" src="{{$streamer->stream->thumbnail}}" alt="stream-thumb">
                     <div class="pl-3" style="font-size: 0.8rem">
                       <strong class="mb-2" style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">{{ $stream->title }}</strong>
@@ -48,7 +69,7 @@
             <div class="mt-3" v-if="selected == 'videos'" style="position:absolute; height:100%; overflow-y:auto; overflow-x:hidden;">
               @foreach($ytvideos as $video)
                 
-                <div class="mb-4 text-white flex-lc thumbnail" @click="youtube({{$video}},{{$video->player}})">
+                <div class="mb-4 text-white flex-lc" @click="youtube({{$video}},{{$video->player}})">
                     <img width="160" height="90" src="{{$video->thumbnail}}" alt="stream-thumb">
                     <div class="pl-3" style="font-size: 0.8rem">
                       <strong class="mb-2" style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">{{ $video->title }}</strong>
@@ -130,13 +151,7 @@
   <script type="text/javascript">
 
         window.onload = function () {
-          @if(isset($streamers[0]->stream->title))
-          featured.twitch({!! collect($streamers[0]->stream) !!},{!! $streamers[0] !!})
-          @elseif(isset($streamers[count($streamers) - 1]->stream->title))
-          featured.twitch({!! collect($streamers[1]->stream) !!},{!! $streamers[1] !!})
-          @else
           featured.youtube({!!$ytvideos[0]!!},{!!$ytvideos[0]->player!!})
-          @endif
         }
        
 

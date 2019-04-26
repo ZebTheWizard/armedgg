@@ -1,9 +1,10 @@
-@extends('layouts.main-layout')
+@extends('layouts.main-layout', ["includeNavigation" => false])
 @section('content')
 
 
 <section>
-  <div class="container">
+  <div class="container" style="min-height: 100vh; padding-top:60px">
+    @include('layouts.navbar')
     {{-- <div class="h2">Roster</div> --}}
     <?php $show = [] ?>
     @forelse($categories as $category)

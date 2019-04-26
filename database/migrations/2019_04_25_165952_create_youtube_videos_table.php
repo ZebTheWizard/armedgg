@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateStreamersTable extends Migration
+class CreateYoutubeVideosTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,14 @@ class CreateStreamersTable extends Migration
      */
     public function up()
     {
-        Schema::create('streamers', function (Blueprint $table) {
+        Schema::create('youtube_videos', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->primary('id');
             $table->string('id', 36)->index();
+            $table->string('title');
+            $table->string('thumbnail');
+            $table->integer('views');
             $table->integer('player_id')->references('id')->on('players');
-            $table->string('twitch')->unique();
-            $table->string('twitch_id')->nullable();
-            $table->string('twitch_logo')->nullable();
-            $table->string('twitch_display_name')->nullable();
-            $table->boolean('twitch_live')->default(0);
             $table->timestamps();
         });
     }
@@ -34,6 +32,6 @@ class CreateStreamersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('streamers');
+        Schema::dropIfExists('youtube_videos');
     }
 }

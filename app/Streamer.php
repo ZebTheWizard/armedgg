@@ -10,7 +10,7 @@ class Streamer extends Model
   use \App\Traits\Guid;
 
   protected $fillable = [
-      'id', 'twitch', 'twitch_live', 'player_id'
+      'id', 'twitch', 'twitch_live', 'player_id', 'twitch_id', 'twitch_logo', 'twitch_display_name'
   ];
 
   public function player() {

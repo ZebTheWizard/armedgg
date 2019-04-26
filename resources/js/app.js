@@ -50,6 +50,60 @@ Vue.component('category-picker', require('./components/CategoryPicker.vue'));
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+if (document.body.contains(document.getElementById('featured'))) {
+  window.featured = new Vue({
+    el: '#featured',
+    data: {
+      selected: 'live'
+    },
+    methods: {
+      select (thing) {
+        this.selected = thing
+      },
+      _getWindowDimensions () {
+        this.fs = document.getElementById('featured-video')
+        this.fsw = this.fs.getBoundingClientRect().width
+        this.fs.style.height = (this.fsw / 16 * 9) + 'px'
+      },
+      _fv(thing, value, prop="innerHTML") {
+        return document.getElementById('video-' + thing)[prop] = value
+      },
+      twitch(video, streamer) {
+        document.getElementById('featured-video').innerHTML = null
+        this._getWindowDimensions()
+        console.log(streamer)
+        this._fv('user_name', video.user_name)
+        this._fv('views', video.viewer_count)
+        this._fv('title', video.title)
+        this._fv('avatar', streamer.twitch_logo, 'src')
+        document.getElementById('video-info').style.display = "flex"
+        this.select('live')
+        new Twitch.Embed("featured-video", {
+          width: "100%",
+          height: this.fsw / 16 * 9,
+          channel: video.user_name,
+          layout: "video",
+          theme: "dark"
+        });
+      },
+      youtube(video, player){
+        
+        this._getWindowDimensions()
+        this._fv('user_name', player.name)
+        this._fv('views', video.views)
+        this._fv('title', video.title)
+        this._fv('avatar', player.avatar, 'src')
+        document.getElementById('video-info').style.display = "flex"
+        this.select('videos')
+        document.getElementById('featured-video').innerHTML = `
+        <iframe style="width:100%" height="${this.fsw/16*9}" src="https://www.youtube.com/embed/${video.id}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        `
+        
+      }
+    }
+  })
+}
+
 if (document.body.contains(document.getElementById('dashboard'))) {
   const dashboard = new Vue({
       el: '#dashboard',

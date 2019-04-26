@@ -62,6 +62,13 @@ class PlayerController extends Controller
     return back();
   }
 
+  public function getYoutube(Player $player) {
+    if (!$player->youtube) abort(404);
+    $videos = getYoutubeVideosFromChannel($player->youtube);
+    
+    return response()->json($videos);
+  }
+
     // public function twitch ($username) {
     //   dd(liveOnTwitch($username));
     // }
@@ -145,15 +152,6 @@ class PlayerController extends Controller
     //   return view('player')->with('player', $player);
     // }
     //
-    // public function getYoutube(Player $player) {
-    //   if (!$player->youtube) abort(404);
-    //   $xml = xmlToJson(getbody("https://www.youtube.com/feeds/videos.xml?channel_id=" . $player->youtube));
-    //   foreach($xml['entry'] as &$entry) {
-    //     $entry['id'] = parse_query($entry['link']['@attributes']['href'])['v'];
-    //   }
-    //   $xml['entry'] = array_slice($xml['entry'], 0, 4);
-    //   // return response()->json($xml);
-    //   return response()->json($xml);
-    // }
+    
 
 }

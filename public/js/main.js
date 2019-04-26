@@ -21,29 +21,29 @@
         // }
         if (window.pageYOffset > height2) {
             nav.classList.add('bg-white', 'text-dark')
-            nav.classList.remove('bg-black', 'text-white')
-            logo.width = 60
+            nav.classList.remove('bg-dark', 'text-white')
+            logo.width = 50
             logo.src = "/logo-black.png"
             Array.from(dropnavs).forEach(dropnav => {
               dropnav.classList.remove('bg-white', 'text-dark')
-              dropnav.classList.add('bg-black', 'text-white')
+              dropnav.classList.add('bg-dark', 'text-white')
             })
         } else {
             nav.classList.remove('bg-white', 'text-dark')
-            nav.classList.add('bg-black', 'text-white')
+            nav.classList.add('bg-dark', 'text-white')
             Array.from(dropnavs).forEach(dropnav => {
               dropnav.classList.add('bg-white', 'text-dark')
-              dropnav.classList.remove('bg-black', 'text-white')
-              logo.width = 100
+              dropnav.classList.remove('bg-dark', 'text-white')
+              logo.width = 50
               logo.src = "/logo-white.png"
             })
         }
         height = height2
       }
 
-      fn()
-      window.addEventListener('scroll', fn)
-      window.addEventListener('resize', fn)
+      // fn()
+      // window.addEventListener('scroll', fn)
+      // window.addEventListener('resize', fn)
     }
 
 
