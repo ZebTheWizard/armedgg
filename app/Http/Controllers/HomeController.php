@@ -29,6 +29,7 @@ class HomeController extends Controller
                 $streamer->stream = isset($data[0]) ? $data[0] : (object)[]; 
                 $streamer->stream->thumbnail = "https://static-cdn.jtvnw.net/previews-ttv/live_user_{$streamer->twitch}-480x270.jpg";
             }
+            // return response()->json($streamers);
             return view('home', [
                 "articles" => News::limit(5)->orderBy('created_at', 'desc')->get(),
                 "player" => $player,

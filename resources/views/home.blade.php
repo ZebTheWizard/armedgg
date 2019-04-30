@@ -33,12 +33,13 @@
               @foreach($streamers as $streamer)
                 @php $stream = $streamer->stream; @endphp
                 @if(isset($stream->title))
-                <div id="twitch-{{$stream->twitch_id}}" class="mb-4 flex-lc thumbnail" @click="twitch({{collect($stream)}},{{$streamer}})">
+                <div id="twitch-{{$streamer->twitch_id}}" class="mb-4 flex-lt thumbnail" @click="twitch({{collect($stream)}},{{$streamer}})">
                     <img width="156" height="87" src="{{$streamer->stream->thumbnail}}" alt="stream-thumb">
                     <div class="pl-3 text-small">
                       <strong class="mb-2 clamp-2">{{ $stream->title }}</strong>
                       <div>{{ $stream->user_name }}</div>
-                      <strong>{{ number_format($stream->viewer_count) }}</strong>
+                      <span class="mr-1">Viewers:</span>
+                      <strong id="thumbnail-views-{{$streamer->twitch_id}}">{{ number_format($stream->viewer_count) }}</strong>
                     </div>
                 </div>
                 @endif
@@ -50,11 +51,12 @@
             <div class="h-100 overflow-y-onhover p-abs" v-show="selected == 'videos'">
               @foreach($ytvideos as $video)
                 
-                <div id="youtube-{{$video->id}}" class="mb-4 text-white flex-lc thumbnail" @click="youtube({{$video}},{{$video->player}})" >
+                <div id="youtube-{{$video->id}}" class="mb-4 text-white flex-lt thumbnail" @click="youtube({{$video}},{{$video->player}})" >
                     <img width="160" height="90" src="https://i.ytimg.com/vi/{{$video->id}}/mqdefault.jpg" alt="stream-thumb">
                     <div class="pl-3 text-small">
                       <strong class="mb-2 clamp-2 overflow-none">{{ $video->title }}</strong>
                       <div>{{ $video->player->name }}</div>
+                      <span class="mr-1">Views:</span>
                       <strong>{{ number_format($video->views) }}</strong>
                     </div>
                 </div>

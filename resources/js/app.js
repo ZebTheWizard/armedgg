@@ -64,6 +64,7 @@ if (document.body.contains(document.getElementById('featured'))) {
     data: {
       selected: 'live',
       viewInterval: null,
+      views: 0
     },
     methods: {
       select (thing) {
@@ -85,26 +86,30 @@ if (document.body.contains(document.getElementById('featured'))) {
         });
         el.classList.add(classname)
       },
-      _vi(el, views) {
+      _vi(views) {
         clearInterval(this.viewInterval)
         var fn = () => {
           var max = Math.floor(views * 0.112) + Math.floor(Math.random() * 6)
           var randomViewers = views + Math.floor(Math.random() * max)
-          this._fv(el, randomViewers)
+          this.views = randomViewers || 1
         }
         this.viewInterval = setInterval(fn, 15000)
         fn()
       },
       twitch(video, streamer) {
+        var thumbnail = document.getElementById('twitch-' + streamer.twitch_id)
         document.getElementById('featured-video').innerHTML = null
         this._getWindowDimensions()
         console.log(streamer)
         this._fv('user_name', video.user_name)
-        this._vi('views', video.viewer_count)
+        this._vi(video.viewer_count + 1)
+        this._fv('views', this.views)
+        document.getElementById('thumbnail-views-' + streamer.twitch_id).innerHTML = this.views
         this._fv('title', video.title)
         this._fv('avatar', streamer.twitch_logo, 'src')
         // this._rc()
         document.getElementById('video-info').style.display = "flex"
+        this._rc(thumbnail, '.thumbnail', 'active')
         this.select('live')
         new Twitch.Embed("featured-video", {
           width: "100%",
