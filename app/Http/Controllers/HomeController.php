@@ -26,8 +26,9 @@ class HomeController extends Controller
 
             foreach($streamers as &$streamer) {
                 $data = getTwitchStreamByUser($streamer->twitch_id)->data;
+                $username = strToLower($streamer->twitch);
                 $streamer->stream = isset($data[0]) ? $data[0] : (object)[]; 
-                $streamer->stream->thumbnail = "https://static-cdn.jtvnw.net/previews-ttv/live_user_{$streamer->twitch}-480x270.jpg";
+                $streamer->stream->thumbnail = "https://static-cdn.jtvnw.net/previews-ttv/live_user_$username-480x270.jpg";
             }
             // return response()->json($streamers);
             return view('home', [

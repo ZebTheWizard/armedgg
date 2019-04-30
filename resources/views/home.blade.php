@@ -13,8 +13,8 @@
           <img id="video-avatar" class="mt-2" src="" width="50" height="50" alt="streamer-avatar" >
           <div class="col flex-sbt ml-3"xw>
             <div class="text-white text-reset">
-              <div class="h6 text m-0" id="video-title">...</div>
-              <div id="video-user_name"></div>
+              <a href="" class="h6 text text-white m-0 d-block" id="video-title">...</a>
+              <a href="" class="text-white d-block text-reset" id="video-user_name"></a>
             </div>
             <div class="h6 text m-0 flex-cc"><i class="fas fa-eye mr-2"></i> <span id="video-views"></span>  </div>
           </div>
@@ -38,8 +38,8 @@
                     <div class="pl-3 text-small">
                       <strong class="mb-2 clamp-2">{{ $stream->title }}</strong>
                       <div>{{ $stream->user_name }}</div>
-                      <span class="mr-1">Viewers:</span>
                       <strong id="thumbnail-views-{{$streamer->twitch_id}}">{{ number_format($stream->viewer_count) }}</strong>
+                      <span class="ml-1">watching</span>
                     </div>
                 </div>
                 @endif
@@ -56,8 +56,8 @@
                     <div class="pl-3 text-small">
                       <strong class="mb-2 clamp-2 overflow-none">{{ $video->title }}</strong>
                       <div>{{ $video->player->name }}</div>
-                      <span class="mr-1">Views:</span>
                       <strong>{{ number_format($video->views) }}</strong>
+                      <span class="ml-1">views</span>
                     </div>
                 </div>
                 

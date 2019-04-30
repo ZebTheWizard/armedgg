@@ -1521,10 +1521,12 @@ if (document.body.contains(document.getElementById('featured'))) {
         this._getWindowDimensions();
         console.log(streamer);
         this._fv('user_name', video.user_name);
+        this._fv('user_name', 'https://twitch.tv/' + video.user_name, 'href');
         this._vi(video.viewer_count + 1);
         this._fv('views', this.views);
         document.getElementById('thumbnail-views-' + streamer.twitch_id).innerHTML = this.views;
         this._fv('title', video.title);
+        this._fv('title', 'https://twitch.tv/' + video.user_name, 'href');
         this._fv('avatar', streamer.twitch_logo, 'src');
         // this._rc()
         document.getElementById('video-info').style.display = "flex";
@@ -1541,8 +1543,10 @@ if (document.body.contains(document.getElementById('featured'))) {
       youtube: function youtube(video, player) {
         this._getWindowDimensions();
         this._fv('user_name', player.name);
+        this._fv('user_name', 'https://youtube.com/channel/' + player.youtube, 'href');
         this._fv('views', video.views);
         this._fv('title', video.title);
+        this._fv('title', 'https://youtube.com/watch?v=' + video.id, 'href');
         this._fv('avatar', player.avatar, 'src');
         document.getElementById('video-info').style.display = "flex";
         console.log('youtube-' + video.id, document.getElementById('youtube-' + video.id));
