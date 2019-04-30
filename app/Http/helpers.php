@@ -157,7 +157,8 @@ function getYoutubeUploadsFromChannel($channel) {
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
   $result = json_decode(curl_exec($ch));
   curl_close($ch);
-  return $result->items[0]->contentDetails->relatedPlaylists->uploads;
+  dump($result);
+  return isset($result->items) ? $result->items[0]->contentDetails->relatedPlaylists->uploads : (object)[];
 }
 
 function getYoutubeVideosFromPlaylist($playist, $max=10) {
@@ -167,7 +168,7 @@ function getYoutubeVideosFromPlaylist($playist, $max=10) {
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
   $result = json_decode(curl_exec($ch));
   curl_close($ch);
-  return $result->items;
+  return isset($result->items) ? $result->items : (object)[];
 }
 
 function getYoutubeVideoStats($video) {
@@ -177,7 +178,7 @@ function getYoutubeVideoStats($video) {
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "GET");
   $result = json_decode(curl_exec($ch));
   curl_close($ch);
-  return $result->items[0]->statistics;
+  return isset($result->items) ? $result->items[0]->statistics : (object)[];
 }
 
 if (! function_exists('in_array_r')) {

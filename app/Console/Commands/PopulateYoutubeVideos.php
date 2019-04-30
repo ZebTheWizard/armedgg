@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Player;
 use App\YoutubeVideo;
 use Carbon\Carbon;
+use Symfony\Component\Process\Process;
 
 class PopulateYoutubeVideos extends Command
 {
@@ -40,35 +41,39 @@ class PopulateYoutubeVideos extends Command
      */
     public function handle()
     {
-        $p = Player::find(2);
+        // $p = Player::find(2);
 
         $players = Player::whereNotNull('youtube')->get();
-        foreach($players as $player) {
-            $uploadPlayist = getYoutubeUploadsFromChannel($player->youtube);
-            $videos = getYoutubeVideosFromPlaylist($uploadPlayist);
-            foreach($videos as $video) {
-                $v = $video->snippet;
-                $id = $v->resourceId->videoId;
-                $stats = getYoutubeVideoStats($id);
-                $date = Carbon::parse($v->publishedAt)->format('Y-m-d H:i:s');
+        $channel_ids = $players->pluck('youtube')->implode(",");
+        // dd($);
+        $process = new Process(["./getYoutubeStats", "--channels", $channel_ids, "--key", env("YOUTUBE_KEY")]);
+        try {
+            $process->mustRun();
+            $data = json_decode($process->getOutput());
+            foreach($data as $video) {
+                $player = $players->where("youtube", $video->channel_id)->first();
+                $date = Carbon::parse($video->publishedAt)->format('Y-m-d H:i:s');
                 $data = [
-                    "id" => $id,
-                    "title" => $v->title,
+                    "id" => $video->id,
+                    "title" => $video->title,
                     "player_id" => $player->id,
-                    "thumbnail" => $v->thumbnails->medium->url,
-                    "views" => $stats->viewCount,
+                    "thumbnail" => $video->thumbnail,
+                    "views" => $video->viewCount,
                     "created_at" => $date
                 ];
-                $yt = YoutubeVideo::find($id);
+                $yt = YoutubeVideo::find($video->id);
                 if ($yt) {
                     $yt->update($data);
                 } else {
-                    YoutubeVideo::create($data);
+                    $yt = YoutubeVideo::create($data);
                 }
-                dump($data);
+                dump($yt->toArray());
             }
+            
+            dd("[DONE]");
+        } catch (ProcessFailedException $exception) {
+            echo $exception->getMessage();
         }
-        // dump($players->toArray());
         
     }
 }

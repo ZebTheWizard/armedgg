@@ -13,6 +13,14 @@ import {Checkbox, Radio} from 'vue-checkbox-radio';
 
 window.Vue = require('vue');
 
+window.ready = function(fn) {
+  if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading"){
+    fn();
+  } else {
+    document.addEventListener('DOMContentLoaded', fn);
+  }
+}
+
 // window.loaded = function () {
 //   document.querySelectorAll('.sectionloader').forEach(node => {
 //     node.classList.remove('is-active')
@@ -54,7 +62,8 @@ if (document.body.contains(document.getElementById('featured'))) {
   window.featured = new Vue({
     el: '#featured',
     data: {
-      selected: 'live'
+      selected: 'live',
+      viewInterval: null,
     },
     methods: {
       select (thing) {
@@ -64,18 +73,37 @@ if (document.body.contains(document.getElementById('featured'))) {
         this.fs = document.getElementById('featured-video')
         this.fsw = this.fs.getBoundingClientRect().width
         this.fs.style.height = (this.fsw / 16 * 9) + 'px'
+
       },
       _fv(thing, value, prop="innerHTML") {
         return document.getElementById('video-' + thing)[prop] = value
+      },
+      _rc(el, selector, classname) {
+        var elems = document.querySelectorAll(selector);
+        [].forEach.call(elems, function(elem) {
+            elem.classList.remove(classname)
+        });
+        el.classList.add(classname)
+      },
+      _vi(el, views) {
+        clearInterval(this.viewInterval)
+        var fn = () => {
+          var max = Math.floor(views * 0.112) + Math.floor(Math.random() * 6)
+          var randomViewers = views + Math.floor(Math.random() * max)
+          this._fv(el, randomViewers)
+        }
+        this.viewInterval = setInterval(fn, 15000)
+        fn()
       },
       twitch(video, streamer) {
         document.getElementById('featured-video').innerHTML = null
         this._getWindowDimensions()
         console.log(streamer)
         this._fv('user_name', video.user_name)
-        this._fv('views', video.viewer_count)
+        this._vi('views', video.viewer_count)
         this._fv('title', video.title)
         this._fv('avatar', streamer.twitch_logo, 'src')
+        // this._rc()
         document.getElementById('video-info').style.display = "flex"
         this.select('live')
         new Twitch.Embed("featured-video", {
@@ -87,18 +115,18 @@ if (document.body.contains(document.getElementById('featured'))) {
         });
       },
       youtube(video, player){
-        
         this._getWindowDimensions()
         this._fv('user_name', player.name)
         this._fv('views', video.views)
         this._fv('title', video.title)
         this._fv('avatar', player.avatar, 'src')
         document.getElementById('video-info').style.display = "flex"
+        console.log('youtube-' + video.id, document.getElementById('youtube-' + video.id))
+        this._rc(document.getElementById('youtube-' + video.id), '.thumbnail', 'active')
         this.select('videos')
         document.getElementById('featured-video').innerHTML = `
-        <iframe style="width:100%" height="${this.fsw/16*9}" src="https://www.youtube.com/embed/${video.id}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <iframe style="width:100%" height="${this.fsw/16*9}" src="https://www.youtube.com/embed/${video.id}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         `
-        
       }
     }
   })

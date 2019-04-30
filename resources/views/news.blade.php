@@ -1,10 +1,9 @@
-@extends('layouts.main-layout')
-
+@extends('layouts.main-layout', ["includeNavigation" => false])
 @section('content')
 
 
-<section>
-
+<section class="has-nav">
+  @include('layouts.navbar')
   <div class="container">
       <div class="col-12 mt-3">
         <form action="/news" method="get" autocomplete="off">

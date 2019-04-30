@@ -1429,6 +1429,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 window.Vue = __webpack_require__(35);
 
+window.ready = function (fn) {
+  if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+    fn();
+  } else {
+    document.addEventListener('DOMContentLoaded', fn);
+  }
+};
+
 // window.loaded = function () {
 //   document.querySelectorAll('.sectionloader').forEach(node => {
 //     node.classList.remove('is-active')
@@ -1470,7 +1478,8 @@ if (document.body.contains(document.getElementById('featured'))) {
   window.featured = new Vue({
     el: '#featured',
     data: {
-      selected: 'live'
+      selected: 'live',
+      viewInterval: null
     },
     methods: {
       select: function select(thing) {
@@ -1486,14 +1495,34 @@ if (document.body.contains(document.getElementById('featured'))) {
 
         return document.getElementById('video-' + thing)[prop] = value;
       },
+      _rc: function _rc(el, selector, classname) {
+        var elems = document.querySelectorAll(selector);
+        [].forEach.call(elems, function (elem) {
+          elem.classList.remove(classname);
+        });
+        el.classList.add(classname);
+      },
+      _vi: function _vi(el, views) {
+        var _this = this;
+
+        clearInterval(this.viewInterval);
+        var fn = function fn() {
+          var max = Math.floor(views * 0.112) + Math.floor(Math.random() * 6);
+          var randomViewers = views + Math.floor(Math.random() * max);
+          _this._fv(el, randomViewers);
+        };
+        this.viewInterval = setInterval(fn, 15000);
+        fn();
+      },
       twitch: function twitch(video, streamer) {
         document.getElementById('featured-video').innerHTML = null;
         this._getWindowDimensions();
         console.log(streamer);
         this._fv('user_name', video.user_name);
-        this._fv('views', video.viewer_count);
+        this._vi('views', video.viewer_count);
         this._fv('title', video.title);
         this._fv('avatar', streamer.twitch_logo, 'src');
+        // this._rc()
         document.getElementById('video-info').style.display = "flex";
         this.select('live');
         new Twitch.Embed("featured-video", {
@@ -1505,15 +1534,16 @@ if (document.body.contains(document.getElementById('featured'))) {
         });
       },
       youtube: function youtube(video, player) {
-
         this._getWindowDimensions();
         this._fv('user_name', player.name);
         this._fv('views', video.views);
         this._fv('title', video.title);
         this._fv('avatar', player.avatar, 'src');
         document.getElementById('video-info').style.display = "flex";
+        console.log('youtube-' + video.id, document.getElementById('youtube-' + video.id));
+        this._rc(document.getElementById('youtube-' + video.id), '.thumbnail', 'active');
         this.select('videos');
-        document.getElementById('featured-video').innerHTML = "\n        <iframe style=\"width:100%\" height=\"" + this.fsw / 16 * 9 + "\" src=\"https://www.youtube.com/embed/" + video.id + "\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>\n        ";
+        document.getElementById('featured-video').innerHTML = "\n        <iframe style=\"width:100%\" height=\"" + this.fsw / 16 * 9 + "\" src=\"https://www.youtube.com/embed/" + video.id + "?autoplay=1\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe>\n        ";
       }
     }
   });

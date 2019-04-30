@@ -2,9 +2,10 @@
 @section('content')
 
 
-<section>
-  <div class="container" style="min-height: 100vh; padding-top:60px">
-    @include('layouts.navbar')
+<section class="has-nav">
+  @include('layouts.navbar')
+  <div class="container">
+    
     {{-- <div class="h2">Roster</div> --}}
     <?php $show = [] ?>
     @forelse($categories as $category)
