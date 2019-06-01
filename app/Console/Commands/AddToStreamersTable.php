@@ -53,7 +53,7 @@ class AddToStreamersTable extends Command
           "player_id" => $player->id,
         ],[
           "twitch" => $player->twitch,
-          "twitch_live" => !!getTwitchStreamByUser($id)->data,
+          "twitch_live" => liveOnTwitch($player->twitch),
           "twitch_id" => $id,
           "twitch_logo" => $player->twitch_logo ?? $twitch_user->logo,
           "twitch_display_name" => $player->twitch_display_name ?? $twitch_user->display_name,
