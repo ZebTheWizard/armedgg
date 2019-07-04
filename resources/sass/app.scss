@@ -254,3 +254,23 @@ button.dropdown-item{
   width: 7px;
   border-radius: 10px;
 }
+
+
+.video-section {
+  display: grid;
+  grid-template-columns: 8fr 3fr;
+  padding-top: 3rem;
+  grid-gap: 1rem;
+  @media (max-width: 900px) {
+      grid-template-columns: auto;
+      grid-template-rows: auto auto;
+  }
+}
+
+.videos {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  max-height: 100vh;
+  background: black;
+}

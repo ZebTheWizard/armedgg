@@ -31,7 +31,7 @@
 
 <script src="https://embed.twitch.tv/embed/v1.js"></script>
 
-<!-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> -->
+<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
