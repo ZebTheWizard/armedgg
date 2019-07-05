@@ -11,10 +11,10 @@
         <div id="featured-video" class="video"></div>
 
         <div class="col-12 flex-cc pt-3 text-white hide" id="video-info">
-          <img id="video-avatar" class="mt-2" src="" width="50" height="50" alt="streamer-avatar" >
+          <img id="video-avatar" class="mt-2 d-block" src="https://via.placeholder.com/150/000000/000000/?text=streamer" width="50" height="50" alt="streamer-avatar" >
           <div class="col flex-sbt ml-3"xw>
             <div class="text-white text-reset">
-              <a href="" class="h6 text text-white m-0 d-block" id="video-title">...</a>
+              <a href="" class="h6 text text-white m-0 d-block" id="video-title" style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical; height:40px;">...</a>
               <a href="" class="text-white d-block text-reset" id="video-user_name"></a>
             </div>
             <div class="h6 text m-0 flex-cc"><i class="fas fa-eye mr-2"></i> <span id="video-views"></span>  </div>
