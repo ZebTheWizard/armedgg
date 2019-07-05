@@ -105,19 +105,19 @@
 
   <script type="text/javascript">
 
-        ready(function () {
-          @if(isset($streamers))
-            @if(isset($streamers[0]->stream->title))
-            featured.twitch({!! collect($streamers[0]->stream) !!},{!! $streamers[0] !!})
-            @elseif(isset($streamers[count($streamers) - 1]->stream->title))
-            featured.twitch({!! collect($streamers[1]->stream) !!},{!! $streamers[1] !!})
-            @else
-            featured.youtube({!!$ytvideos[0]!!},{!!$ytvideos[0]->player!!})
-            @endif
-          @else
-          featured.youtube({!!$ytvideos[0]!!},{!!$ytvideos[0]->player!!})
-          @endif
-        })
+        // ready(function () {
+        //   @if(isset($streamers))
+        //     @if(isset($streamers[0]->stream->title))
+        //     featured.twitch({!! collect($streamers[0]->stream) !!},{!! $streamers[0] !!})
+        //     @elseif(isset($streamers[count($streamers) - 1]->stream->title))
+        //     featured.twitch({!! collect($streamers[1]->stream) !!},{!! $streamers[1] !!})
+        //     @else
+        //     featured.youtube({!!$ytvideos[0]!!},{!!$ytvideos[0]->player!!})
+        //     @endif
+        //   @else
+        //   featured.youtube({!!$ytvideos[0]!!},{!!$ytvideos[0]->player!!})
+        //   @endif
+        // })
 
 
   </script>

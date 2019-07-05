@@ -55,7 +55,7 @@
 
 ?>
 
-<nav class="fixed bg-dark text-white" >
+<nav class="fixed bg-black text-white" >
     <!-- <div id="read-progress"></div> -->
     <div class="px-4">
       <div class="row">
@@ -65,7 +65,7 @@
 
 
         </div>
-        <div class="col-2 flex-cc">
+        <div class="col-tablet-2 col-3 flex-cc flex-cc">
           <a href="/"><img src="/logo-white.png?v=1"class="mx-auto" style="max-width: 100%; height: auto;" width="60" id="logo"></a>
         </div>
         <div class="col flex-rc">
@@ -75,7 +75,7 @@
 
           <label for="navmenu" class="show-lt-tablet-landscape parent ml-3"><i class="far fa-bars fa-large"></i>
             <input type="checkbox" class="navcheck" id="navmenu">
-            <div class="dropnav dropnav-small">
+            <div class="dropnav dropnav-small bg-black">
                 {!! renderNavMobile(\App\Navigation::fetch()->used) !!}
 
             </div>
