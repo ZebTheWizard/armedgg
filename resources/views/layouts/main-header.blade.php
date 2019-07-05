@@ -15,6 +15,7 @@
 <link href="https://fonts.googleapis.com/css?family=Fira+Sans:900i,700|Martel:400,700" rel="stylesheet" />
 <link href="https://fonts.googleapis.com/css?family=Merriweather:900i|Amiko:400|Montserrat:600|Lora:400" rel="stylesheet" />
 <!-- <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet"> -->
+<link href="{{ asset('css/app.css') }}" rel="stylesheet">
 <link rel="stylesheet" href="/css/main.min.css">
 
 <!-- Styles -->
@@ -31,7 +32,7 @@
 
 <script src="https://embed.twitch.tv/embed/v1.js"></script>
 
-<link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
 
 
 <!-- Global site tag (gtag.js) - Google Analytics -->

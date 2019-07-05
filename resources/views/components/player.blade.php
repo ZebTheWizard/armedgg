@@ -1,6 +1,6 @@
 
 <div class="col-tablet-portrait-3 p-1">
-  <div class="col-12 square">
+  <div class="w-100 square">
     <div class="content">
       @if($player->avatar)
         <img class="col-12" src="{{ $player->avatar }}" alt="" >
