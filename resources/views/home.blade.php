@@ -107,7 +107,7 @@
 
         ready(function () {
           @if(isset($streamers))
-            @if(isset($streamers[0])
+            @if(isset($streamers[0]))
                 @if(isset($streamers[0]->stream->title))
                 featured.twitch({!! collect($streamers[0]->stream) !!},{!! $streamers[0] !!})
                 @elseif(isset($streamers[count($streamers) - 1]->stream->title))
