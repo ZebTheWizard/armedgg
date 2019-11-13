@@ -29,7 +29,7 @@ function onMention(tweet) {
 
 function main() {
     twitter.getMentionsTimeline({ count: '200' }, error, success);
-    console.log("\n" + (new Date).toString());
+    console.log("\n" + new Date().toLocaleString("en-US", {timeZone: "America/Chicago"}));
 }
 
 main()
