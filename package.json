@@ -21,10 +21,12 @@
     },
     "dependencies": {
         "cropperjs": "^1.4.3",
+        "dotenv": "^8.2.0",
         "image-preload": "^1.0.6",
         "sugar": "^2.0.6",
         "twitch": "^1.0.5",
         "twitch-pubsub-client": "^1.0.1",
+        "twitter-node-client": "0.0.6",
         "url-exists": "^1.0.3",
         "vue-avatar-cropper": "0.0.28",
         "vue-checkbox-radio": "^0.6.0",
